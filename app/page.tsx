@@ -1,3 +1,5 @@
+"use client";
+
 import dynamic from "next/dynamic";
 
 // Динамический импорт R3F-варианта, чтобы не трогать SSR

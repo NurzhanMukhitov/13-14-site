@@ -5,14 +5,14 @@
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
 
-type PointsRef = React.MutableRefObject<THREE.Points | null>;
+type PointsRef = React.MutableRefObject<any>;
 
 type SpherePointsProps = {
   pointer: React.MutableRefObject<[number, number] | null>;
 };
 
 function SpherePoints({ pointer }: SpherePointsProps) {
-  const pointsRef = useRef<THREE.Points | null>(null) as PointsRef;
+  const pointsRef = useRef<any>(null) as PointsRef;
 
   // Генерируем точки на сфере один раз
   const { basePositions, positions } = useMemo(() => {
@@ -127,9 +127,12 @@ export function SphereCanvasR3F() {
       camera={{ position: [0, 0, 3], fov: 45 }}
       style={{ width: "100%", height: "100%" }}
       onPointerMove={(event) => {
-        // event.point — координаты в мировом пространстве на плоскости z=0
-        const { x, y } = event.point;
-        pointer.current = [x, y];
+        // используем нормализованные координаты указателя и проецируем их в условное пространство
+        const { width, height } = event.currentTarget.getBoundingClientRect();
+        const nx = (event.clientX / width) * 2 - 1;
+        const ny = -(event.clientY / height) * 2 + 1;
+        // простая проекция в плоскость XY
+        pointer.current = [nx, ny];
       }}
       onPointerLeave={() => {
         pointer.current = null;
