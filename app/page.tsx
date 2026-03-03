@@ -1,4 +1,10 @@
-import { SphereCanvas } from "@/components/sphere-canvas";
+import dynamic from "next/dynamic";
+
+// Динамический импорт R3F-варианта, чтобы не трогать SSR
+const SphereCanvasR3F = dynamic(
+  () => import("@/components/sphere-r3f").then((m) => m.SphereCanvasR3F),
+  { ssr: false },
+);
 
 export default function Home() {
   return (
@@ -16,7 +22,7 @@ export default function Home() {
           id="visual-sketch"
           className="flex w-full items-center justify-center px-6 py-10"
         >
-          <SphereCanvas />
+          <SphereCanvasR3F />
         </div>
       </section>
     </main>
