@@ -5,6 +5,13 @@ import { useEffect } from "react";
 
 export function SphereCanvas() {
   useEffect(() => {
+    let cancelled = false;
+
+    // Shared pointer state — updated by native PointerEvents, read by p5 draw()
+    let pointerX: number | null = null;
+    let pointerY: number | null = null;
+    let pointerCleanup: (() => void) | null = null;
+
     const sketch = (s: any) => {
       let repelRadius: number;
       let radius: number;
@@ -40,7 +47,7 @@ export function SphereCanvas() {
       const MOBILE_RADIUS = 160;
       const MOBILE_REPEL_RADIUS = 60;
       const MOBILE_TEXT_SIZE = 3;
-      const MOBILE_PARTICLES = 4000;
+      const MOBILE_PARTICLES = 2000;
 
       function calculateCanvasSize() {
         const container = document.getElementById("visual-sketch");
@@ -53,6 +60,7 @@ export function SphereCanvas() {
             repelRadius: DESIGN_REPEL_RADIUS,
             textSize: DESIGN_TEXT_SIZE,
             particles: DESIGN_PARTICLES,
+            isMobile: false,
           };
         }
 
@@ -74,9 +82,11 @@ export function SphereCanvas() {
             repelRadius: MOBILE_REPEL_RADIUS,
             textSize: MOBILE_TEXT_SIZE,
             particles: MOBILE_PARTICLES,
+            isMobile: true,
           };
         }
 
+        const isMid = targetWidth < 600;
         return {
           width: Math.round(targetWidth),
           height: Math.round(targetHeight),
@@ -90,32 +100,16 @@ export function SphereCanvas() {
               DESIGN_TEXT_SIZE * Math.sqrt(scale),
             ),
           ),
-          particles: targetWidth < 600 ? MOBILE_PARTICLES : DESIGN_PARTICLES,
+          particles: isMid ? MOBILE_PARTICLES : DESIGN_PARTICLES,
+          isMobile: isMid,
         };
       }
 
+      // Uses shared pointer state set by native PointerEvents (reliable on iOS)
       function getInteractionPoint() {
-        const firstTouch = (s.touches && s.touches[0]) as
-          | { x: number; y: number }
-          | undefined;
-        if (firstTouch) {
-          return s.createVector(
-            firstTouch.x - s.width / 2,
-            firstTouch.y - s.height / 2,
-          );
+        if (pointerX !== null && pointerY !== null) {
+          return s.createVector(pointerX - s.width / 2, pointerY - s.height / 2);
         }
-
-        if (
-          s.mouseIsPressed ||
-          s.mouseX !== s.pmouseX ||
-          s.mouseY !== s.pmouseY
-        ) {
-          return s.createVector(
-            s.mouseX - s.width / 2,
-            s.mouseY - s.height / 2,
-          );
-        }
-
         return null;
       }
 
@@ -132,6 +126,10 @@ export function SphereCanvas() {
 
       s.setup = () => {
         const canvasConfig = calculateCanvasSize();
+
+        // pixelDensity MUST be set before createCanvas for Safari compatibility
+        s.pixelDensity(1);
+
         const canvas = s.createCanvas(
           canvasConfig.width,
           canvasConfig.height,
@@ -139,13 +137,42 @@ export function SphereCanvas() {
 
         radius = canvasConfig.radius;
         repelRadius = canvasConfig.repelRadius;
+        if (canvasConfig.isMobile) s.frameRate(30);
 
         const container = document.getElementById("visual-sketch");
         if (container) {
           canvas.parent(container);
         }
 
-        s.pixelDensity(1);
+        const canvasEl = canvas.elt as HTMLCanvasElement;
+        canvasEl.style.background = "transparent";
+        canvasEl.style.touchAction = "none";
+
+        // Native PointerEvents — reliable across mouse, touch, stylus on all browsers
+        const onMove = (e: PointerEvent) => {
+          const rect = canvasEl.getBoundingClientRect();
+          pointerX = e.clientX - rect.left;
+          pointerY = e.clientY - rect.top;
+        };
+        const onEnd = () => {
+          pointerX = null;
+          pointerY = null;
+        };
+
+        canvasEl.addEventListener("pointermove", onMove, { passive: true });
+        canvasEl.addEventListener("pointerdown", onMove, { passive: true });
+        canvasEl.addEventListener("pointerup", onEnd);
+        canvasEl.addEventListener("pointerleave", onEnd);
+        canvasEl.addEventListener("pointercancel", onEnd);
+
+        pointerCleanup = () => {
+          canvasEl.removeEventListener("pointermove", onMove);
+          canvasEl.removeEventListener("pointerdown", onMove);
+          canvasEl.removeEventListener("pointerup", onEnd);
+          canvasEl.removeEventListener("pointerleave", onEnd);
+          canvasEl.removeEventListener("pointercancel", onEnd);
+        };
+
         s.textAlign(s.CENTER, s.CENTER);
         s.textFont("monospace");
         s.textStyle(s.NORMAL);
@@ -171,7 +198,7 @@ export function SphereCanvas() {
       };
 
       s.draw = () => {
-        s.background(0);
+        s.clear();
         s.translate(s.width / 2, s.height / 2);
 
         const interactionPoint = getInteractionPoint();
@@ -248,22 +275,35 @@ export function SphereCanvas() {
       };
 
       s.windowResized = () => {
-        const canvasConfig = calculateCanvasSize();
-        s.resizeCanvas(canvasConfig.width, canvasConfig.height);
-        radius = canvasConfig.radius;
-        repelRadius = canvasConfig.repelRadius;
-        s.textSize(canvasConfig.textSize);
-        updateTargets();
+        // Delay lets CSS reflow finish (important on orientation change)
+        setTimeout(() => {
+          const canvasConfig = calculateCanvasSize();
+          s.resizeCanvas(canvasConfig.width, canvasConfig.height);
+          radius = canvasConfig.radius;
+          repelRadius = canvasConfig.repelRadius;
+          s.textSize(canvasConfig.textSize);
+          if (canvasConfig.isMobile) s.frameRate(30);
+          else s.frameRate(60);
+          updateTargets();
+        }, 150);
       };
     };
 
     let instance: any;
 
     import("p5").then(({ default: P5 }) => {
+      if (cancelled) return;
+      const container = document.getElementById("visual-sketch");
+      if (container) {
+        const staleCanvases = container.querySelectorAll("canvas");
+        staleCanvases.forEach((node) => node.remove());
+      }
       instance = new P5(sketch);
     });
 
     return () => {
+      cancelled = true;
+      pointerCleanup?.();
       if (instance) {
         instance.remove();
       }
@@ -272,4 +312,3 @@ export function SphereCanvas() {
 
   return null;
 }
-
