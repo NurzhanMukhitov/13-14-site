@@ -86,8 +86,8 @@ export default function Home() {
     if (!root) return;
 
     const updateActive = () => {
-      const width = root.clientWidth || 1;
-      const index = Math.round(root.scrollLeft / width);
+      const height = root.clientHeight || 1;
+      const index = Math.round(root.scrollTop / height);
       const allIds = [...projectScreens.map((s) => s.id), authorId];
       const nextId = allIds[Math.max(0, Math.min(allIds.length - 1, index))];
       setActiveScreenId((prev) => (prev === nextId ? prev : nextId));
@@ -120,7 +120,7 @@ export default function Home() {
     const root = scrollerRef.current;
     if (!root) return;
     const target = root.querySelector<HTMLElement>(`#${id}`);
-    target?.scrollIntoView({ behavior: "smooth", inline: "start" });
+    target?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   // Hint color based on current screen theme
@@ -203,19 +203,10 @@ export default function Home() {
           showHint ? "opacity-100" : "opacity-0"
         } ${hintDark ? "text-white" : "text-black"}`}
       >
-        <div className="flex items-center gap-5 animate-pulse">
+        <div className="animate-pulse">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
             <path
-              d="M15 5L9 12L15 19"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M9 5L15 12L9 19"
+              d="M5 9L12 15L19 9"
               stroke="currentColor"
               strokeWidth="2"
               strokeLinecap="round"
@@ -228,7 +219,7 @@ export default function Home() {
       {/* ── Main horizontal scroller ── */}
       <main
         ref={scrollerRef}
-        className="flex h-[100dvh] snap-x snap-mandatory overflow-x-auto overflow-y-hidden scroll-smooth"
+        className="h-[100dvh] snap-y snap-mandatory overflow-y-auto overflow-x-hidden scroll-smooth"
       >
         {projectScreens.map((screen) => {
           const dark = screen.theme === "dark";
@@ -236,7 +227,7 @@ export default function Home() {
             <section
               key={screen.id}
               id={screen.id}
-              className={`relative h-[100dvh] min-w-full snap-start overflow-hidden pt-14 ${
+              className={`relative h-[100dvh] w-full snap-start overflow-hidden pt-14 ${
                 dark ? "bg-black text-white" : "bg-white text-black"
               }`}
             >
@@ -273,7 +264,7 @@ export default function Home() {
         {/* ── Profile section ── */}
         <section
           id={authorId}
-          className="relative h-[100dvh] min-w-full snap-start overflow-hidden bg-black text-white md:flex md:flex-row"
+          className="relative h-[100dvh] w-full snap-start overflow-hidden bg-black text-white md:flex md:flex-row"
         >
           {/* Sphere — fills screen on mobile (centered), left panel on desktop */}
           <div
