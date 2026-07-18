@@ -68,6 +68,9 @@ const projectNotes: Array<{ label: string; text: string }> = [
 export default function Home() {
   const authorId = "author";
   const scrollerRef = useRef<HTMLElement | null>(null);
+  const titrLeftRef = useRef<HTMLSpanElement | null>(null);
+  const titrBarRef = useRef<HTMLSpanElement | null>(null);
+  const titrRightRef = useRef<HTMLSpanElement | null>(null);
   const [activeScreenId, setActiveScreenId] = useState(projectScreens[0].id);
   const [menuOpen, setMenuOpen] = useState(false);
   const [showHint, setShowHint] = useState(false);
@@ -100,6 +103,59 @@ export default function Home() {
       root.removeEventListener("scroll", updateActive);
       window.removeEventListener("resize", updateActive);
     };
+  }, []);
+
+  // Titr: "13" уезжает вверх, "14" вниз по мере ухода первого экрана
+  useEffect(() => {
+    const root = scrollerRef.current;
+    if (!root) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const height = root.clientHeight || 1;
+      const p = Math.min(Math.max(root.scrollTop / height, 0), 1);
+      if (titrLeftRef.current) {
+        titrLeftRef.current.style.transform = `translateY(${-p * 80}vh)`;
+      }
+      if (titrRightRef.current) {
+        titrRightRef.current.style.transform = `translateY(${p * 180}vh)`;
+      }
+      if (titrBarRef.current) {
+        titrBarRef.current.style.opacity = `${1 - Math.min(p * 2.5, 1)}`;
+      }
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+
+    update();
+    root.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      root.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  // Reveal: тексты наводятся на резкость один раз при входе в кадр
+  useEffect(() => {
+    const root = scrollerRef.current;
+    if (!root) return;
+    const els = root.querySelectorAll<HTMLElement>(".reveal-blur");
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-revealed");
+            io.unobserve(entry.target);
+          }
+        }
+      },
+      { root, threshold: 0.4 },
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
   }, []);
 
   // Scroll hint: show after 2s, hide on first scroll
@@ -136,12 +192,15 @@ export default function Home() {
           <button
             key={item.id}
             type="button"
-            className={`shrink-0 transition-opacity hover:opacity-65 ${
+            className={`shrink-0 transition-opacity ${
               activeScreenId === item.id ? "opacity-100" : "opacity-70"
             }`}
             onClick={() => scrollToScreen(item.id)}
           >
-            {item.label}
+            <span className="nav-roll">
+              <span>{item.label}</span>
+              <span aria-hidden="true">{item.label}</span>
+            </span>
           </button>
         ))}
       </nav>
@@ -235,7 +294,24 @@ export default function Home() {
                 {screen.withHero ? (
                   <div className="flex flex-1 w-full items-center justify-center">
                     <h1 className="text-center text-[clamp(3rem,15vw,9rem)] font-black leading-[0.92] tracking-[-0.03em]">
-                      13 | 14
+                      <span
+                        ref={titrLeftRef}
+                        className="inline-block will-change-transform"
+                      >
+                        13
+                      </span>
+                      <span
+                        ref={titrBarRef}
+                        className="mx-[0.22em] inline-block"
+                      >
+                        |
+                      </span>
+                      <span
+                        ref={titrRightRef}
+                        className="inline-block will-change-transform"
+                      >
+                        14
+                      </span>
                     </h1>
                   </div>
                 ) : (
@@ -249,7 +325,7 @@ export default function Home() {
                 )}
                 {screen.subtitle ? (
                   <p
-                    className={`text-center text-xs tracking-[0.12em] ${
+                    className={`reveal-blur text-center text-xs tracking-[0.12em] ${
                       dark ? "text-white/70" : "text-black/70"
                     }`}
                   >
@@ -275,7 +351,7 @@ export default function Home() {
           </div>
 
           {/* Mobile: just two lines at bottom-left */}
-          <div className="absolute bottom-8 left-6 z-10 space-y-1 md:hidden">
+          <div className="reveal-blur absolute bottom-8 left-6 z-10 space-y-1 md:hidden">
             <p className="text-[11px] tracking-[0.14em] text-white/75">
               Untitled (Profile)
             </p>
@@ -287,7 +363,7 @@ export default function Home() {
           {/* Desktop: full text panel on the right */}
           <div className="hidden flex-1 overflow-y-auto px-8 pb-10 pt-24 md:block">
             <div className="space-y-8 max-w-[520px]">
-              <div className="space-y-1">
+              <div className="reveal-blur space-y-1">
                 <p className="text-[11px] tracking-[0.14em] text-white/75">
                   Untitled (Profile)
                 </p>
@@ -295,8 +371,14 @@ export default function Home() {
                   info@13-14.space
                 </p>
               </div>
-              {projectNotes.map((item) => (
-                <article key={item.label}>
+              {projectNotes.map((item, i) => (
+                <article
+                  key={item.label}
+                  className="reveal-blur"
+                  style={
+                    { "--reveal-delay": `${(i + 1) * 0.12}s` } as React.CSSProperties
+                  }
+                >
                   <p className="mb-1 text-[11px] tracking-[0.14em] text-white/70">
                     {item.label}
                   </p>
