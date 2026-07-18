@@ -142,6 +142,25 @@ export default function Home() {
         titrBarRef.current.style.opacity = `${1 - Math.min(p * 2.5, 1)}`;
         titrBarRef.current.style.filter = sandFilter;
       }
+
+      // Шторка: накрытый экран уходит вглубь — масштаб и вуаль
+      const sections = root.querySelectorAll<HTMLElement>("section");
+      sections.forEach((section, i) => {
+        const covered = Math.min(
+          Math.max(root.scrollTop / height - i, 0),
+          1,
+        );
+        const inner = section.querySelector<HTMLElement>(
+          "[data-screen-inner]",
+        );
+        const veil = section.querySelector<HTMLElement>("[data-screen-veil]");
+        if (inner) {
+          inner.style.transform = covered > 0 ? `scale(${1 - covered * 0.06})` : "";
+        }
+        if (veil) {
+          veil.style.opacity = `${covered * 0.45}`;
+        }
+      });
     };
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(update);
@@ -152,6 +171,34 @@ export default function Home() {
     return () => {
       root.removeEventListener("scroll", onScroll);
       if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  // JS-снап: CSS scroll-snap несовместим со sticky-шторкой
+  // (снап-точки прилипших экранов блокируют скролл вверх), дотягиваем сами
+  useEffect(() => {
+    const root = scrollerRef.current;
+    if (!root) return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let timer: number | undefined;
+    const onScroll = () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        const h = root.clientHeight || 1;
+        const target =
+          Math.min(
+            Math.round(root.scrollTop / h),
+            Math.round((root.scrollHeight - h) / h),
+          ) * h;
+        if (Math.abs(target - root.scrollTop) > 1) {
+          root.scrollTo({ top: target, behavior: reduced ? "auto" : "smooth" });
+        }
+      }, 200);
+    };
+    root.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      root.removeEventListener("scroll", onScroll);
+      window.clearTimeout(timer);
     };
   }, []);
 
@@ -192,8 +239,12 @@ export default function Home() {
   const scrollToScreen = (id: string) => {
     const root = scrollerRef.current;
     if (!root) return;
-    const target = root.querySelector<HTMLElement>(`#${id}`);
-    target?.scrollIntoView({ behavior: "smooth", block: "start" });
+    // Секции sticky — scrollIntoView для "прилипшего" экрана не сработает,
+    // поэтому скроллим по индексу
+    const allIds = [...projectScreens.map((s) => s.id), authorId];
+    const index = allIds.indexOf(id);
+    if (index < 0) return;
+    root.scrollTo({ top: index * root.clientHeight, behavior: "smooth" });
   };
 
   // Hint color based on current screen theme
@@ -295,7 +346,7 @@ export default function Home() {
       {/* ── Main horizontal scroller ── */}
       <main
         ref={scrollerRef}
-        className="h-[100dvh] snap-y snap-mandatory overflow-y-auto overflow-x-hidden scroll-smooth"
+        className="h-[100dvh] overflow-y-auto overflow-x-hidden scroll-smooth"
       >
         {projectScreens.map((screen) => {
           const dark = screen.theme === "dark";
@@ -303,11 +354,14 @@ export default function Home() {
             <section
               key={screen.id}
               id={screen.id}
-              className={`relative h-[100dvh] w-full snap-start overflow-hidden pt-14 ${
+              className={`sticky top-0 h-[100dvh] w-full overflow-hidden pt-14 ${
                 dark ? "bg-black text-white" : "bg-white text-black"
               }`}
             >
-              <div className="flex h-full flex-col items-center justify-center gap-6 px-4 md:px-8">
+              <div
+                data-screen-inner
+                className="flex h-full flex-col items-center justify-center gap-6 px-4 md:px-8"
+              >
                 {screen.withHero ? (
                   <div className="flex flex-1 w-full items-center justify-center">
                     <svg
@@ -379,6 +433,10 @@ export default function Home() {
                   </p>
                 ) : null}
               </div>
+              <div
+                data-screen-veil
+                className="pointer-events-none absolute inset-0 bg-black opacity-0"
+              />
             </section>
           );
         })}
@@ -386,7 +444,7 @@ export default function Home() {
         {/* ── Profile section ── */}
         <section
           id={authorId}
-          className="relative h-[100dvh] w-full snap-start overflow-hidden bg-black text-white md:flex md:flex-row"
+          className="sticky top-0 h-[100dvh] w-full overflow-hidden bg-black text-white md:flex md:flex-row"
         >
           {/* Sphere — fills screen on mobile (centered), left panel on desktop */}
           <div
