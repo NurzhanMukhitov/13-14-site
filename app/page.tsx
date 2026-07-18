@@ -71,6 +71,7 @@ export default function Home() {
   const titrLeftRef = useRef<HTMLSpanElement | null>(null);
   const titrBarRef = useRef<HTMLSpanElement | null>(null);
   const titrRightRef = useRef<HTMLSpanElement | null>(null);
+  const sandScaleRef = useRef<SVGFEDisplacementMapElement | null>(null);
   const [activeScreenId, setActiveScreenId] = useState(projectScreens[0].id);
   const [menuOpen, setMenuOpen] = useState(false);
   const [showHint, setShowHint] = useState(false);
@@ -105,25 +106,41 @@ export default function Home() {
     };
   }, []);
 
-  // Titr: "13" уезжает вверх, "14" вниз по мере ухода первого экрана
+  // Titr: "13" уезжает вверх, "14" вниз, рассыпаясь в песок (SVG displacement)
   useEffect(() => {
     const root = scrollerRef.current;
     if (!root) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // SVG-фильтр дорог на GPU — песок только там, где есть настоящий указатель
+    const sandEnabled = window.matchMedia("(pointer: fine)").matches;
 
     let raf = 0;
     const update = () => {
       raf = 0;
       const height = root.clientHeight || 1;
       const p = Math.min(Math.max(root.scrollTop / height, 0), 1);
+      // Фильтр снимается в покое (p=0), иначе живой SVG-фильтр зря жрёт GPU
+      const sandFilter = sandEnabled && p > 0 ? "url(#sand-titr)" : "none";
+      const fade = `${1 - Math.min(p * 1.8, 1)}`;
+      if (sandScaleRef.current) {
+        sandScaleRef.current.setAttribute(
+          "scale",
+          String(Math.min(p * 3, 1) * 150),
+        );
+      }
       if (titrLeftRef.current) {
         titrLeftRef.current.style.transform = `translateY(${-p * 80}vh)`;
+        titrLeftRef.current.style.filter = sandFilter;
+        titrLeftRef.current.style.opacity = fade;
       }
       if (titrRightRef.current) {
         titrRightRef.current.style.transform = `translateY(${p * 180}vh)`;
+        titrRightRef.current.style.filter = sandFilter;
+        titrRightRef.current.style.opacity = fade;
       }
       if (titrBarRef.current) {
         titrBarRef.current.style.opacity = `${1 - Math.min(p * 2.5, 1)}`;
+        titrBarRef.current.style.filter = sandFilter;
       }
     };
     const onScroll = () => {
@@ -293,6 +310,35 @@ export default function Home() {
               <div className="flex h-full flex-col items-center justify-center gap-6 px-4 md:px-8">
                 {screen.withHero ? (
                   <div className="flex flex-1 w-full items-center justify-center">
+                    <svg
+                      width="0"
+                      height="0"
+                      aria-hidden="true"
+                      className="absolute"
+                    >
+                      <filter
+                        id="sand-titr"
+                        x="-30%"
+                        y="-30%"
+                        width="160%"
+                        height="160%"
+                      >
+                        <feTurbulence
+                          type="fractalNoise"
+                          baseFrequency="1.4"
+                          numOctaves="3"
+                          result="noise"
+                        />
+                        <feDisplacementMap
+                          ref={sandScaleRef}
+                          in="SourceGraphic"
+                          in2="noise"
+                          scale="0"
+                          xChannelSelector="R"
+                          yChannelSelector="G"
+                        />
+                      </filter>
+                    </svg>
                     <h1 className="text-center text-[clamp(3rem,15vw,9rem)] font-black leading-[0.92] tracking-[-0.03em]">
                       <span
                         ref={titrLeftRef}
