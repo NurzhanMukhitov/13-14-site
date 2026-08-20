@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { SphereCanvas } from "@/components/sphere-canvas";
+import ProfileCard from "@/components/ProfileCard";
 import { Menu, X } from "lucide-react";
 
 type ProjectScreen = {
@@ -379,9 +379,17 @@ export default function Home() {
           {/* Sphere — fills screen on mobile (centered), left panel on desktop */}
           <div
             id="visual-sketch"
-            className="absolute inset-0 flex items-center justify-center overflow-hidden pt-14 md:relative md:inset-auto md:h-full md:w-[44%] md:flex-shrink-0 md:pt-16"
+            className="absolute inset-0 flex items-center justify-center overflow-hidden px-6 pt-14 md:relative md:inset-auto md:h-full md:w-[44%] md:flex-shrink-0 md:pt-16"
           >
-            <SphereCanvas />
+            <ProfileCard
+              avatarUrl="/profile/photo.jpg"
+              iconUrl=""
+              grainUrl=""
+              name=""
+              title=""
+              showUserInfo={false}
+              enableTilt={true}
+            />
           </div>
 
           {/* Mobile: just two lines at bottom-left */}
