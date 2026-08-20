@@ -575,24 +575,34 @@
   height: 100%;
   object-fit: cover;
   object-position: 50% 18%;
-  transform: translate3d(
-    calc((var(--pointer-from-left) - 0.5) * 8px),
-    calc((var(--pointer-from-top) - 0.5) * 8px),
-    0
-  );
+  transform: translateZ(0);
   filter: grayscale(1) contrast(1.06) brightness(0.98);
   z-index: 5;
-  animation: nm-glitch 6s infinite;
+  animation: none; /* глитч временно выключен для диагностики моргания */
 }
 
 /* Глитч: короткий заметный стутер раз в ~6с (clip-path + filter, чтобы не спорить с parallax-transform) */
 @keyframes nm-glitch {
-  0%, 90%, 100% { clip-path: inset(0 0 0 0); filter: grayscale(1) contrast(1.06) brightness(0.98); }
-  91% { clip-path: inset(12% 0 58% 0); filter: grayscale(1) contrast(1.5) brightness(1.12); }
-  92% { clip-path: inset(54% 0 20% 0); filter: grayscale(1) contrast(0.85) brightness(0.9) invert(0.08); }
-  93% { clip-path: inset(0 0 0 0); filter: grayscale(1) contrast(1.06) brightness(0.98); }
-  94% { clip-path: inset(36% 0 44% 0); filter: grayscale(1) contrast(1.35) brightness(1.06); }
-  95% { clip-path: inset(0 0 0 0); filter: grayscale(1) contrast(1.06) brightness(0.98); }
+  0%, 96%, 100% {
+    clip-path: inset(0);
+    transform: translateZ(0);
+    filter: grayscale(1) contrast(1.06) brightness(0.98);
+  }
+  97% {
+    clip-path: inset(28% 0 44% 0);
+    transform: translate3d(3px, 0, 0);
+    filter: grayscale(1) contrast(1.25) brightness(1.05);
+  }
+  98% {
+    clip-path: inset(52% 0 24% 0);
+    transform: translate3d(-3px, 0, 0);
+    filter: grayscale(1) contrast(1.25) brightness(1.05);
+  }
+  99% {
+    clip-path: inset(0);
+    transform: translateZ(0);
+    filter: grayscale(1) contrast(1.06) brightness(0.98);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
