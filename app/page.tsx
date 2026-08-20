@@ -10,7 +10,7 @@ type ProjectScreen = {
   title: string;
   subtitle: string;
   theme: "light" | "dark";
-  image?: string;
+  images?: string[];
 };
 
 // Проекты по очерёдности, иностранные первыми.
@@ -20,70 +20,70 @@ const projectScreens: ProjectScreen[] = [
     title: "PROJECT 001",
     subtitle: "Lamborghini 60th Anniversary — Austria",
     theme: "light",
-    image: "/cases/lambo-austria.jpg",
+    images: ["/cases/lambo-austria/1.jpg", "/cases/lambo-austria/2.jpg", "/cases/lambo-austria/3.jpg", "/cases/lambo-austria/4.jpg"],
   },
   {
     id: "project-002",
     title: "PROJECT 002",
     subtitle: "Lamborghini Driving Experience — Dubai & Abu Dhabi",
     theme: "dark",
-    image: "/cases/lambo-dubai.jpg",
+    images: ["/cases/lambo-dubai/1.jpg", "/cases/lambo-dubai/2.jpg", "/cases/lambo-dubai/3.jpg", "/cases/lambo-dubai/4.jpg"],
   },
   {
     id: "project-003",
     title: "PROJECT 003",
     subtitle: "Aston Martin — Dubai Watch Week",
     theme: "light",
-    image: "/cases/aston-martin.jpg",
+    images: ["/cases/aston-martin/1.jpg", "/cases/aston-martin/2.jpg", "/cases/aston-martin/3.jpg", "/cases/aston-martin/4.jpg"],
   },
   {
     id: "project-004",
     title: "PROJECT 004",
     subtitle: "Mercedes-EQ — EQS Premiere",
     theme: "dark",
-    image: "/cases/mercedes-eq.jpg",
+    images: ["/cases/mercedes-eq/1.jpg", "/cases/mercedes-eq/2.jpg", "/cases/mercedes-eq/3.jpg", "/cases/mercedes-eq/4.jpg"],
   },
   {
     id: "project-005",
     title: "PROJECT 005",
     subtitle: "Samsung Galaxy S25 — World Premiere",
     theme: "light",
-    image: "/cases/samsung-galaxy.jpg",
+    images: ["/cases/samsung-galaxy/1.jpg", "/cases/samsung-galaxy/2.jpg", "/cases/samsung-galaxy/3.jpg", "/cases/samsung-galaxy/4.jpg"],
   },
   {
     id: "project-006",
     title: "PROJECT 006",
     subtitle: "OMODA C7 — Futuristic Reveal",
     theme: "dark",
-    image: "/cases/omoda-c7.jpg",
+    images: ["/cases/omoda-c7/1.jpg", "/cases/omoda-c7/2.jpg", "/cases/omoda-c7/3.jpg", "/cases/omoda-c7/4.jpg"],
   },
   {
     id: "project-007",
     title: "PROJECT 007",
     subtitle: "T-Bank PAYvolution — Biometrics in Action",
     theme: "light",
-    image: "/cases/tbank-payvolution.jpg",
+    images: ["/cases/tbank-payvolution/1.jpg", "/cases/tbank-payvolution/2.jpg", "/cases/tbank-payvolution/3.jpg"],
   },
   {
     id: "project-008",
     title: "PROJECT 008",
     subtitle: "Yandex Fabrika — Creativity at Scale",
     theme: "dark",
-    image: "/cases/yandex-fabrika.jpg",
+    images: ["/cases/yandex-fabrika/1.jpg", "/cases/yandex-fabrika/2.jpg", "/cases/yandex-fabrika/3.jpg"],
   },
   {
     id: "project-009",
     title: "PROJECT 009",
     subtitle: "Positive Technologies — Games of the Future",
     theme: "light",
-    image: "/cases/positive-technologies.jpg",
+    images: ["/cases/positive-technologies/1.jpg", "/cases/positive-technologies/2.jpg", "/cases/positive-technologies/3.jpg", "/cases/positive-technologies/4.jpg"],
   },
   {
     id: "project-010",
     title: "PROJECT 010",
     subtitle: "T-Bank — Music Festivals",
     theme: "dark",
-    image: "/cases/tbank-festivals.jpg",
+    images: ["/cases/tbank-festivals/1.jpg", "/cases/tbank-festivals/2.jpg", "/cases/tbank-festivals/3.jpg", "/cases/tbank-festivals/4.jpg"],
   },
 ];
 
@@ -439,14 +439,8 @@ export default function Home() {
                     dark ? "border-white/20" : "border-black/20"
                   }`}
                 >
-                  {screen.image ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={screen.image}
-                      alt={screen.subtitle}
-                      loading="lazy"
-                      className="h-full w-full object-cover"
-                    />
+                  {screen.images && screen.images.length > 0 ? (
+                    <Slideshow images={screen.images} alt={screen.subtitle} />
                   ) : (
                     <div
                       className={`h-full w-full ${
