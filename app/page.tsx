@@ -413,29 +413,14 @@ export default function Home() {
                   info@13-14.space
                 </p>
               </div>
-              {projectNotes.map((item, i) => (
-                <article
-                  key={item.label}
-                  className="reveal-blur"
-                  style={
-                    { "--reveal-delay": `${(i + 1) * 0.12}s` } as React.CSSProperties
-                  }
-                >
-                  <p className="mb-1 text-[11px] tracking-[0.14em] text-white/70">
-                    {item.label}
-                  </p>
-                  <p className="text-[11px] leading-relaxed text-white/80">
-                    {item.text}
-                  </p>
-                </article>
-              ))}
             </div>
           </div>
         </section>
 
         {/* ── Project screens ── */}
-        {projectScreens.map((screen) => {
+        {projectScreens.map((screen, index) => {
           const dark = screen.theme === "dark";
+          const note = projectNotes[index];
           return (
             <section
               key={screen.id}
@@ -449,7 +434,7 @@ export default function Home() {
                 className="flex h-full flex-col items-center justify-center gap-6 px-4 md:px-8"
               >
                 <div
-                  className={`h-[65vh] w-full overflow-hidden md:max-w-[760px] border ${
+                  className={`relative h-[65vh] w-full overflow-hidden md:max-w-[760px] border ${
                     dark ? "border-white/20" : "border-black/20"
                   }`}
                 >
@@ -468,16 +453,18 @@ export default function Home() {
                       }`}
                     />
                   )}
+                  {/* Полупрозрачная накладка-шторка на всё фото, текст на подкладке */}
+                  <div className="absolute inset-0 flex flex-col justify-end bg-black/55 px-5 pb-6 md:px-7 md:pb-8">
+                    <p className="mb-2 text-[11px] tracking-[0.16em] text-white/80">
+                      {screen.subtitle}
+                    </p>
+                    {note?.text ? (
+                      <p className="max-w-[64ch] text-[13px] leading-relaxed text-white/90">
+                        {note.text}
+                      </p>
+                    ) : null}
+                  </div>
                 </div>
-                {screen.subtitle ? (
-                  <p
-                    className={`reveal-blur text-center text-xs tracking-[0.12em] ${
-                      dark ? "text-white/70" : "text-black/70"
-                    }`}
-                  >
-                    {screen.subtitle}
-                  </p>
-                ) : null}
               </div>
               <div
                 data-screen-veil
