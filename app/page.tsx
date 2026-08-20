@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import ProfileCard from "@/components/ProfileCard";
+import { Slideshow } from "@/components/Slideshow";
 import { Menu, X } from "lucide-react";
 
 type ProjectScreen = {
