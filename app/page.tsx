@@ -9,79 +9,139 @@ type ProjectScreen = {
   title: string;
   subtitle: string;
   theme: "light" | "dark";
-  withHero?: boolean;
+  image?: string;
 };
 
+// Проекты по очерёдности, иностранные первыми.
 const projectScreens: ProjectScreen[] = [
-  {
-    id: "project-000",
-    title: "PROJECT 000",
-    subtitle: "",
-    theme: "light",
-    withHero: true,
-  },
   {
     id: "project-001",
     title: "PROJECT 001",
-    subtitle: "Generative Particle Surface",
-    theme: "dark",
+    subtitle: "Lamborghini 60th Anniversary — Austria",
+    theme: "light",
+    image: "/cases/lambo-austria.jpg",
   },
   {
     id: "project-002",
     title: "PROJECT 002",
-    subtitle: "Editorial Architecture Studies",
-    theme: "light",
+    subtitle: "Lamborghini Driving Experience — Dubai & Abu Dhabi",
+    theme: "dark",
+    image: "/cases/lambo-dubai.jpg",
   },
   {
     id: "project-003",
     title: "PROJECT 003",
-    subtitle: "Analog Structures Archive",
-    theme: "dark",
+    subtitle: "Aston Martin — Dubai Watch Week",
+    theme: "light",
+    image: "/cases/aston-martin.jpg",
   },
   {
     id: "project-004",
     title: "PROJECT 004",
-    subtitle: "Material and Form Research",
+    subtitle: "Mercedes-EQ — EQS Premiere",
+    theme: "dark",
+    image: "/cases/mercedes-eq.jpg",
+  },
+  {
+    id: "project-005",
+    title: "PROJECT 005",
+    subtitle: "Samsung Galaxy S25 — World Premiere",
     theme: "light",
+    image: "/cases/samsung-galaxy.jpg",
+  },
+  {
+    id: "project-006",
+    title: "PROJECT 006",
+    subtitle: "OMODA C7 — Futuristic Reveal",
+    theme: "dark",
+    image: "/cases/omoda-c7.jpg",
+  },
+  {
+    id: "project-007",
+    title: "PROJECT 007",
+    subtitle: "T-Bank PAYvolution — Biometrics in Action",
+    theme: "light",
+    image: "/cases/tbank-payvolution.jpg",
+  },
+  {
+    id: "project-008",
+    title: "PROJECT 008",
+    subtitle: "Yandex Fabrika — Creativity at Scale",
+    theme: "dark",
+    image: "/cases/yandex-fabrika.jpg",
+  },
+  {
+    id: "project-009",
+    title: "PROJECT 009",
+    subtitle: "Positive Technologies — Games of the Future",
+    theme: "light",
+    image: "/cases/positive-technologies.jpg",
+  },
+  {
+    id: "project-010",
+    title: "PROJECT 010",
+    subtitle: "T-Bank — Music Festivals",
+    theme: "dark",
+    image: "/cases/tbank-festivals.jpg",
   },
 ];
 
 const projectNotes: Array<{ label: string; text: string }> = [
   {
-    label: "PROJECT 001",
-    text: "A generative particle surface explores tension between order and noise. The structure reacts to interaction and keeps a calm rhythm. This study frames the visual language of the whole series.",
+    label: "PROJECT 001 — Lamborghini 60th Anniversary",
+    text: "A private 60th-anniversary dinner for Lamborghini in Austria, held at a working observatory. A planetary program with stargazing alongside astronomers, and an exclusive themed menu by a local chef, for 60 guests.",
   },
   {
-    label: "PROJECT 002",
-    text: "An editorial composition around industrial architecture and quiet geometry. Images are treated as documents but arranged like a visual essay. Contrast and spacing carry most of the narrative.",
+    label: "PROJECT 002 — Lamborghini Driving Experience",
+    text: "An exclusive high-performance driving experience combining track adrenaline with refined hospitality. Full-scale turnkey delivery at a Formula 1 circuit with 16 Temerario cars — curated pit-lane spaces, catering, registration, and guest journey.",
   },
   {
-    label: "PROJECT 003",
-    text: "A darker chapter focused on material texture and structural repetition. The sequence moves from macro details to wide architectural cuts. The pacing is slow to emphasize form and weight.",
+    label: "PROJECT 003 — Aston Martin",
+    text: "Concept and delivery of the brand space that opened Dubai Watch Week, the year's most premium event. An expo stand for the Aston Martin DB12 with a hospitality lounge.",
   },
   {
-    label: "PROJECT 004",
-    text: "A minimal archive of spaces where color appears only as a subtle signal. Frames are intentionally restrained and balanced by negative space. The result is precise, calm, and documentary in tone.",
+    label: "PROJECT 004 — Mercedes-EQ",
+    text: "Launch of the Mercedes-Benz EQS, the brand's first electric car, in Russia. An immersive premiere built on a 1:1 holographic reveal of the vehicle, under the concept “EQS for you, world.”",
+  },
+  {
+    label: "PROJECT 005 — Samsung Galaxy S25",
+    text: "World premiere of the Galaxy S25 flagship line. Five interactive spaces, each dedicated to a Galaxy AI feature, and a show reveal for press and guests.",
+  },
+  {
+    label: "PROJECT 006 — OMODA C7",
+    text: "Launch of the OMODA C7 at Navka Arena. A choreographed futuristic performance with a slider screen and a floating platform, fusing light, motion, and sound for 300+ guests.",
+  },
+  {
+    label: "PROJECT 007 — T-Bank PAYvolution",
+    text: "T-Bank's stand at Finopolis 2025. A six-meter “PAYvolution Tree” anchored an interactive path — a biometric quest with a Telegram bot, a Multibanking demo on a giant LED wall, and a Dolce Vita lounge.",
+  },
+  {
+    label: "PROJECT 008 — Yandex Fabrika",
+    text: "The first unified brand stand for Yandex Fabrika — a 100 m², six-meter installation with an industrial polycarbonate silhouette, a game quest linking nine brands, and 3,100 active participants.",
+  },
+  {
+    label: "PROJECT 009 — Positive Technologies",
+    text: "The brand's first large integration into a partner event. A hockey-themed stand at Tatneft Arena and a creative brand zone at Kazan Expo, plus a Positive House for staff and guests.",
+  },
+  {
+    label: "PROJECT 010 — T-Bank Music Festivals",
+    text: "Brand zones for T-Bank at the STEREOLETO and Dikaya Myata festivals — a playground concept with a real slide and a photo corner, built as a transformable structure for multiple venues, with game mechanics and rewards.",
   },
 ];
 
 export default function Home() {
   const authorId = "author";
   const scrollerRef = useRef<HTMLElement | null>(null);
-  const titrLeftRef = useRef<HTMLSpanElement | null>(null);
-  const titrBarRef = useRef<HTMLSpanElement | null>(null);
-  const titrRightRef = useRef<HTMLSpanElement | null>(null);
-  const sandScaleRef = useRef<SVGFEDisplacementMapElement | null>(null);
-  const [activeScreenId, setActiveScreenId] = useState(projectScreens[0].id);
+  const [activeScreenId, setActiveScreenId] = useState(authorId);
   const [menuOpen, setMenuOpen] = useState(false);
   const [showHint, setShowHint] = useState(false);
 
+  // Порядок экранов: Profile первым, затем проекты.
+  const screenIds = [authorId, ...projectScreens.map((s) => s.id)];
+
   const navItems = [
-    ...projectScreens.map((screen) => ({
-      id: screen.id,
-      label: screen.id === "project-000" ? "TITLE" : screen.title,
-    })),
     { id: authorId, label: "PROFILE" },
+    ...projectScreens.map((screen) => ({ id: screen.id, label: screen.title })),
   ];
 
   // Track active screen on scroll
@@ -92,8 +152,7 @@ export default function Home() {
     const updateActive = () => {
       const height = root.clientHeight || 1;
       const index = Math.round(root.scrollTop / height);
-      const allIds = [...projectScreens.map((s) => s.id), authorId];
-      const nextId = allIds[Math.max(0, Math.min(allIds.length - 1, index))];
+      const nextId = screenIds[Math.max(0, Math.min(screenIds.length - 1, index))];
       setActiveScreenId((prev) => (prev === nextId ? prev : nextId));
     };
 
@@ -104,55 +163,23 @@ export default function Home() {
       root.removeEventListener("scroll", updateActive);
       window.removeEventListener("resize", updateActive);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Titr: "13" уезжает вверх, "14" вниз, рассыпаясь в песок (SVG displacement)
+  // Шторка: накрытый экран уходит вглубь — масштаб и вуаль
   useEffect(() => {
     const root = scrollerRef.current;
     if (!root) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    // SVG-фильтр дорог на GPU — песок только там, где есть настоящий указатель
-    const sandEnabled = window.matchMedia("(pointer: fine)").matches;
 
     let raf = 0;
     const update = () => {
       raf = 0;
       const height = root.clientHeight || 1;
-      const p = Math.min(Math.max(root.scrollTop / height, 0), 1);
-      // Фильтр снимается в покое (p=0), иначе живой SVG-фильтр зря жрёт GPU
-      const sandFilter = sandEnabled && p > 0 ? "url(#sand-titr)" : "none";
-      const fade = `${1 - Math.min(p * 1.8, 1)}`;
-      if (sandScaleRef.current) {
-        sandScaleRef.current.setAttribute(
-          "scale",
-          String(Math.min(p * 3, 1) * 150),
-        );
-      }
-      if (titrLeftRef.current) {
-        titrLeftRef.current.style.transform = `translateY(${-p * 80}vh)`;
-        titrLeftRef.current.style.filter = sandFilter;
-        titrLeftRef.current.style.opacity = fade;
-      }
-      if (titrRightRef.current) {
-        titrRightRef.current.style.transform = `translateY(${p * 180}vh)`;
-        titrRightRef.current.style.filter = sandFilter;
-        titrRightRef.current.style.opacity = fade;
-      }
-      if (titrBarRef.current) {
-        titrBarRef.current.style.opacity = `${1 - Math.min(p * 2.5, 1)}`;
-        titrBarRef.current.style.filter = sandFilter;
-      }
-
-      // Шторка: накрытый экран уходит вглубь — масштаб и вуаль
       const sections = root.querySelectorAll<HTMLElement>("section");
       sections.forEach((section, i) => {
-        const covered = Math.min(
-          Math.max(root.scrollTop / height - i, 0),
-          1,
-        );
-        const inner = section.querySelector<HTMLElement>(
-          "[data-screen-inner]",
-        );
+        const covered = Math.min(Math.max(root.scrollTop / height - i, 0), 1);
+        const inner = section.querySelector<HTMLElement>("[data-screen-inner]");
         const veil = section.querySelector<HTMLElement>("[data-screen-veil]");
         if (inner) {
           inner.style.transform = covered > 0 ? `scale(${1 - covered * 0.06})` : "";
@@ -175,7 +202,6 @@ export default function Home() {
   }, []);
 
   // JS-снап: CSS scroll-snap несовместим со sticky-шторкой
-  // (снап-точки прилипших экранов блокируют скролл вверх), дотягиваем сами
   useEffect(() => {
     const root = scrollerRef.current;
     if (!root) return;
@@ -239,10 +265,7 @@ export default function Home() {
   const scrollToScreen = (id: string) => {
     const root = scrollerRef.current;
     if (!root) return;
-    // Секции sticky — scrollIntoView для "прилипшего" экрана не сработает,
-    // поэтому скроллим по индексу
-    const allIds = [...projectScreens.map((s) => s.id), authorId];
-    const index = allIds.indexOf(id);
+    const index = screenIds.indexOf(id);
     if (index < 0) return;
     root.scrollTo({ top: index * root.clientHeight, behavior: "smooth" });
   };
@@ -277,9 +300,9 @@ export default function Home() {
       <div className="fixed left-0 top-0 z-50 flex w-full items-center justify-between px-6 py-5 text-white mix-blend-difference md:hidden">
         <button
           type="button"
-          aria-label="Go to title"
+          aria-label="Go to profile"
           className="text-[11px] tracking-[0.14em]"
-          onClick={() => scrollToScreen("project-000")}
+          onClick={() => scrollToScreen(authorId)}
         >
           13 | 14
         </button>
@@ -343,105 +366,12 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ── Main horizontal scroller ── */}
+      {/* ── Main vertical scroller ── */}
       <main
         ref={scrollerRef}
         className="h-[100dvh] overflow-y-auto overflow-x-hidden scroll-smooth"
       >
-        {projectScreens.map((screen) => {
-          const dark = screen.theme === "dark";
-          return (
-            <section
-              key={screen.id}
-              id={screen.id}
-              className={`sticky top-0 h-[100dvh] w-full overflow-hidden pt-14 ${
-                dark ? "bg-black text-white" : "bg-white text-black"
-              }`}
-            >
-              <div
-                data-screen-inner
-                className="flex h-full flex-col items-center justify-center gap-6 px-4 md:px-8"
-              >
-                {screen.withHero ? (
-                  <div className="flex flex-1 w-full items-center justify-center">
-                    <svg
-                      width="0"
-                      height="0"
-                      aria-hidden="true"
-                      className="absolute"
-                    >
-                      <filter
-                        id="sand-titr"
-                        x="-30%"
-                        y="-30%"
-                        width="160%"
-                        height="160%"
-                      >
-                        <feTurbulence
-                          type="fractalNoise"
-                          baseFrequency="1.4"
-                          numOctaves="3"
-                          result="noise"
-                        />
-                        <feDisplacementMap
-                          ref={sandScaleRef}
-                          in="SourceGraphic"
-                          in2="noise"
-                          scale="0"
-                          xChannelSelector="R"
-                          yChannelSelector="G"
-                        />
-                      </filter>
-                    </svg>
-                    <h1 className="text-center text-[clamp(3rem,15vw,9rem)] font-black leading-[0.92] tracking-[-0.03em]">
-                      <span
-                        ref={titrLeftRef}
-                        className="inline-block will-change-transform"
-                      >
-                        13
-                      </span>
-                      <span
-                        ref={titrBarRef}
-                        className="mx-[0.22em] inline-block"
-                      >
-                        |
-                      </span>
-                      <span
-                        ref={titrRightRef}
-                        className="inline-block will-change-transform"
-                      >
-                        14
-                      </span>
-                    </h1>
-                  </div>
-                ) : (
-                  <div
-                    className={`h-[65vh] w-full md:max-w-[760px] border ${
-                      dark
-                        ? "border-white/20 bg-white/5"
-                        : "border-black/20 bg-black/5"
-                    }`}
-                  />
-                )}
-                {screen.subtitle ? (
-                  <p
-                    className={`reveal-blur text-center text-xs tracking-[0.12em] ${
-                      dark ? "text-white/70" : "text-black/70"
-                    }`}
-                  >
-                    {screen.subtitle}
-                  </p>
-                ) : null}
-              </div>
-              <div
-                data-screen-veil
-                className="pointer-events-none absolute inset-0 bg-black opacity-0"
-              />
-            </section>
-          );
-        })}
-
-        {/* ── Profile section ── */}
+        {/* ── Profile section (первый экран, наполним фото + текстом) ── */}
         <section
           id={authorId}
           className="sticky top-0 h-[100dvh] w-full overflow-hidden bg-black text-white md:flex md:flex-row"
@@ -494,6 +424,60 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* ── Project screens ── */}
+        {projectScreens.map((screen) => {
+          const dark = screen.theme === "dark";
+          return (
+            <section
+              key={screen.id}
+              id={screen.id}
+              className={`sticky top-0 h-[100dvh] w-full overflow-hidden pt-14 ${
+                dark ? "bg-black text-white" : "bg-white text-black"
+              }`}
+            >
+              <div
+                data-screen-inner
+                className="flex h-full flex-col items-center justify-center gap-6 px-4 md:px-8"
+              >
+                <div
+                  className={`h-[65vh] w-full overflow-hidden md:max-w-[760px] border ${
+                    dark ? "border-white/20" : "border-black/20"
+                  }`}
+                >
+                  {screen.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={screen.image}
+                      alt={screen.subtitle}
+                      loading="lazy"
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div
+                      className={`h-full w-full ${
+                        dark ? "bg-white/5" : "bg-black/5"
+                      }`}
+                    />
+                  )}
+                </div>
+                {screen.subtitle ? (
+                  <p
+                    className={`reveal-blur text-center text-xs tracking-[0.12em] ${
+                      dark ? "text-white/70" : "text-black/70"
+                    }`}
+                  >
+                    {screen.subtitle}
+                  </p>
+                ) : null}
+              </div>
+              <div
+                data-screen-veil
+                className="pointer-events-none absolute inset-0 bg-black opacity-0"
+              />
+            </section>
+          );
+        })}
       </main>
     </>
   );
