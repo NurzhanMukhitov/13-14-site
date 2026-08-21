@@ -393,27 +393,53 @@ export default function Home() {
             />
           </div>
 
-          {/* Mobile: just two lines at bottom-left */}
-          <div className="reveal-blur absolute bottom-8 left-6 z-10 space-y-1 md:hidden">
-            <p className="text-[11px] tracking-[0.14em] text-white/75">
-              Untitled (Profile)
+          {/* Mobile: name + role at bottom-left */}
+          <div className="absolute bottom-8 left-6 right-6 z-10 space-y-1 md:hidden">
+            <p className="text-base tracking-tight text-white">Nurzhan Mukhitov</p>
+            <p className="text-[10px] tracking-[0.16em] text-white/60">
+              TECHNICAL DIRECTOR &amp; PRODUCER
             </p>
-            <p className="text-[11px] tracking-[0.14em] text-white/70">
+            <p className="pt-1 text-[10px] tracking-[0.14em] text-white/55">
               info@13-14.space
             </p>
           </div>
 
-          {/* Desktop: full text panel on the right */}
+          {/* Desktop: about panel on the right */}
           <div className="hidden flex-1 overflow-y-auto px-8 pb-10 pt-24 md:block">
-            <div className="space-y-8 max-w-[520px]">
-              <div className="reveal-blur space-y-1">
-                <p className="text-[11px] tracking-[0.14em] text-white/75">
-                  Untitled (Profile)
+            <div className="max-w-[440px] space-y-6">
+              <div className="space-y-1">
+                <p className="text-lg tracking-tight text-white">
+                  Nurzhan Mukhitov
                 </p>
-                <p className="text-[11px] tracking-[0.14em] text-white/70">
-                  info@13-14.space
+                <p className="text-[11px] tracking-[0.16em] text-white/60">
+                  TECHNICAL DIRECTOR &amp; PRODUCER
                 </p>
               </div>
+              <p className="text-[13px] leading-relaxed text-white/85">
+                Technical director and producer of live brand experiences. 15+
+                years turning ambitious concepts into events that run flawlessly
+                — on time, on site, in front of an audience.
+              </p>
+              <p className="text-[13px] leading-relaxed text-white/70">
+                I lead the technical side of premieres, brand activations, and
+                experiential events end to end — concept and technical design,
+                production, and on-site delivery. Work spans automotive, tech,
+                and finance brands across Europe, the Middle East, and beyond.
+              </p>
+              <div className="space-y-1.5">
+                <p className="text-[11px] tracking-[0.16em] text-white/45">
+                  CAPABILITIES
+                </p>
+                <p className="text-[12px] leading-relaxed text-white/70">
+                  Technical direction &amp; show control · End-to-end production
+                  · LED, projection &amp; holography · Interactive installations
+                  · Vendor, budget &amp; schedule management · International
+                  turnkey delivery
+                </p>
+              </div>
+              <p className="text-[12px] tracking-[0.1em] text-white/55">
+                info@13-14.space
+              </p>
             </div>
           </div>
         </section>
