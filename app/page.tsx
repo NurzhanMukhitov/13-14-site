@@ -160,12 +160,108 @@ const projectNotes: Array<{ label: string; text: string }> = [
   },
 ];
 
+const projectNotesEs: Array<{ label: string; text: string }> = [
+  {
+    label: "PROJECT 001 — Lamborghini 60th Anniversary",
+    text: "Cena privada por el 60.º aniversario de Lamborghini en Austria, celebrada en un observatorio en activo. Programa planetario con observación de estrellas junto a astrónomos y un menú temático exclusivo de un chef local, para 60 invitados.",
+  },
+  {
+    label: "PROJECT 002 — Lamborghini Driving Experience",
+    text: "Una experiencia de conducción exclusiva que combina la adrenalina de la pista con una hospitalidad refinada. Entrega llave en mano en un circuito de Fórmula 1 con 16 Temerario: espacios de pit-lane, catering, registro y recorrido del invitado.",
+  },
+  {
+    label: "PROJECT 003 — Aston Martin",
+    text: "Concepto y ejecución del espacio de marca que abrió la Dubai Watch Week, el evento más premium del año. Un stand expositivo para el Aston Martin DB12 con lounge de hospitalidad.",
+  },
+  {
+    label: "PROJECT 004 — Mercedes-EQ",
+    text: "Lanzamiento del Mercedes-Benz EQS, el primer eléctrico de la marca, en Rusia. Un estreno inmersivo construido sobre una revelación holográfica 1:1 del vehículo, bajo el concepto «EQS for you, world».",
+  },
+  {
+    label: "PROJECT 005 — Samsung Galaxy S25",
+    text: "Estreno mundial de la línea insignia Galaxy S25. Cinco espacios interactivos, cada uno dedicado a una función de Galaxy AI, y un show de presentación para prensa e invitados.",
+  },
+  {
+    label: "PROJECT 006 — OMODA C7",
+    text: "Lanzamiento del OMODA C7 en el Navka Arena. Una performance futurista coreografiada con pantalla deslizante y plataforma flotante, fusionando luz, movimiento y sonido para más de 300 invitados.",
+  },
+  {
+    label: "PROJECT 007 — T-Bank PAYvolution",
+    text: "El stand de T-Bank en Finopolis 2025. Un «árbol PAYvolution» de seis metros anclaba un recorrido interactivo: una gincana biométrica con bot de Telegram, una demo de multibanca en una pared LED gigante y un lounge Dolce Vita.",
+  },
+  {
+    label: "PROJECT 008 — Yandex Fabrika",
+    text: "El primer stand unificado de Yandex Fabrika: una instalación de 100 m² y seis metros de altura con silueta industrial de policarbonato, un juego que conectaba nueve marcas y 3.100 participantes activos.",
+  },
+  {
+    label: "PROJECT 009 — Positive Technologies",
+    text: "La primera gran integración de la marca en un evento asociado. Un stand de temática de hockey en el Tatneft Arena y una zona creativa de marca en Kazan Expo, además de una Positive House para equipo e invitados.",
+  },
+  {
+    label: "PROJECT 010 — T-Bank Music Festivals",
+    text: "Zonas de marca de T-Bank en los festivales STEREOLETO y Dikaya Myata: un concepto de parque de juegos con tobogán real y rincón de fotos, construido como estructura transformable para varias sedes, con mecánicas de juego y recompensas.",
+  },
+];
+
+type Lang = "en" | "es";
+
+// Тексты интерфейса и профиля по языкам.
+const COPY = {
+  en: {
+    burgerMenu: "Menu",
+    burgerClose: "Close",
+    menuAbout: "ABOUT",
+    menuProjects: "PROJECTS",
+    menuContact: "CONTACT",
+    role: "TECHNICAL DIRECTOR & PRODUCER",
+    about1:
+      "Technical director and producer of live brand experiences. 15+ years turning ambitious concepts into events that run flawlessly — on time, on site, in front of an audience.",
+    about2:
+      "I lead the technical side of premieres, brand activations, and experiential events end to end — concept and technical design, production, and on-site delivery. Work spans automotive, tech, and finance brands across Europe, the Middle East, and beyond.",
+    capsLabel: "CAPABILITIES",
+    caps: "Technical direction & show control · End-to-end production · LED, projection & holography · Interactive installations · Vendor, budget & schedule management · International turnkey delivery",
+    contactLabel: "CONTACT",
+  },
+  es: {
+    burgerMenu: "Menú",
+    burgerClose: "Cerrar",
+    menuAbout: "SOBRE MÍ",
+    menuProjects: "PROYECTOS",
+    menuContact: "CONTACTO",
+    role: "DIRECTOR TÉCNICO Y PRODUCTOR",
+    about1:
+      "Director técnico y productor de experiencias de marca en vivo. Más de 15 años convirtiendo conceptos ambiciosos en eventos que funcionan a la perfección: a tiempo, in situ y frente al público.",
+    about2:
+      "Dirijo de principio a fin la parte técnica de estrenos, activaciones de marca y eventos experienciales: concepto y diseño técnico, producción y ejecución in situ. He trabajado con marcas de automoción, tecnología y finanzas en Europa, Oriente Medio y más allá.",
+    capsLabel: "CAPACIDADES",
+    caps: "Dirección técnica y control de show · Producción integral · LED, proyección y holografía · Instalaciones interactivas · Gestión de proveedores, presupuesto y calendario · Entrega llave en mano internacional",
+    contactLabel: "CONTACTO",
+  },
+} as const;
+
 export default function Home() {
   const authorId = "author";
   const scrollerRef = useRef<HTMLElement | null>(null);
   const [activeScreenId, setActiveScreenId] = useState(authorId);
   const [menuOpen, setMenuOpen] = useState(false);
   const [showHint, setShowHint] = useState(false);
+  const [lang, setLang] = useState<Lang>("en");
+  const c = COPY[lang];
+  const notes = lang === "es" ? projectNotesEs : projectNotes;
+
+  // Язык: восстановить выбор, сохранять при смене
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("lang");
+      if (saved === "es" || saved === "en") setLang(saved);
+    } catch {}
+  }, []);
+  const switchLang = (next: Lang) => {
+    setLang(next);
+    try {
+      localStorage.setItem("lang", next);
+    } catch {}
+  };
 
   const contactId = "contact";
 
@@ -178,9 +274,9 @@ export default function Home() {
 
   // Бургер-меню: три раздела, без выделения цветом.
   const menuItems = [
-    { id: authorId, label: "ABOUT" },
-    { id: "project-001", label: "PROJECTS" },
-    { id: contactId, label: "CONTACT" },
+    { id: authorId, label: c.menuAbout },
+    { id: "project-001", label: c.menuProjects },
+    { id: contactId, label: c.menuContact },
   ];
 
   // Track active screen on scroll
@@ -318,36 +414,97 @@ export default function Home() {
 
   return (
     <>
-      {/* ── Burger button (все брейкпоинты, слева сверху) ── */}
-      <button
-        type="button"
-        aria-label={menuOpen ? "Close menu" : "Open menu"}
-        aria-expanded={menuOpen}
-        className="fixed left-6 top-6 z-[60] flex h-5 w-[30px] flex-col justify-between text-white mix-blend-difference md:left-8"
-        onClick={() => setMenuOpen((v) => !v)}
+      {/* ── Панель меню: чёрная плита, раскрывается сверху ── */}
+      <nav
+        aria-hidden={!menuOpen}
+        className={`bm-panel fixed inset-0 z-[60] bg-black ${
+          menuOpen ? "bm-panel--open" : ""
+        }`}
       >
-        <span
-          className={`h-[3px] w-full bg-white transition-transform duration-300 ${
-            menuOpen ? "translate-y-[8.5px] rotate-45" : ""
-          }`}
-        />
-        <span
-          className={`h-[3px] w-full bg-white transition-opacity duration-300 ${
-            menuOpen ? "opacity-0" : ""
-          }`}
-        />
-        <span
-          className={`h-[3px] w-full bg-white transition-transform duration-300 ${
-            menuOpen ? "-translate-y-[8.5px] -rotate-45" : ""
-          }`}
-        />
-      </button>
+        <div className="absolute left-0 right-0 top-[53%] -translate-y-1/2 px-[max(20px,5vw)]">
+          <ul className="flex list-none flex-col items-start gap-1 md:flex-row md:items-baseline md:justify-between md:gap-6">
+            {menuItems.map((item, i) => (
+              <li key={item.id} className="overflow-hidden">
+                <button
+                  type="button"
+                  className="bm-link whitespace-nowrap text-[clamp(26px,7vw,34px)] font-medium tracking-[0.02em] text-white md:text-[clamp(1.1rem,2vw,1.9rem)]"
+                  style={{ "--i": i } as React.CSSProperties}
+                  onClick={() => {
+                    scrollToScreen(item.id);
+                    setMenuOpen(false);
+                  }}
+                >
+                  {item.label}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </nav>
 
-      {/* ── Wordmark (справа сверху, как логотип в референсе) ── */}
+      {/* ── Топбар: бургер с подписью + язык (слева), вордмарк (справа) ── */}
+      <div className="fixed left-5 top-5 z-[70] flex flex-col items-start gap-5 mix-blend-difference md:left-7">
+        <button
+          type="button"
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
+          className={`bm-burger flex items-center gap-3 text-white transition-transform duration-300 origin-left hover:scale-[1.06] active:scale-[0.97] ${
+            menuOpen ? "bm-burger--open" : ""
+          }`}
+          onClick={() => setMenuOpen((v) => !v)}
+        >
+          <span
+            aria-hidden="true"
+            className="flex flex-col items-start gap-[7px]"
+          >
+            <span
+              className={`block h-px w-[26px] bg-current transition-transform duration-500 ${
+                menuOpen ? "translate-y-[8px] rotate-45" : ""
+              }`}
+            />
+            <span
+              className={`block h-px w-[26px] bg-current transition-opacity duration-300 ${
+                menuOpen ? "opacity-0" : ""
+              }`}
+            />
+            <span
+              className={`block h-px w-[26px] bg-current transition-transform duration-500 ${
+                menuOpen ? "-translate-y-[8px] -rotate-45" : ""
+              }`}
+            />
+          </span>
+          <span
+            aria-hidden="true"
+            className="relative block h-[1.2em] w-[5.2em] overflow-hidden text-left font-mono text-[12px] uppercase tracking-[0.08em]"
+          >
+            <span className="bm-word bm-word--menu">{c.burgerMenu}</span>
+            <span className="bm-word bm-word--close">{c.burgerClose}</span>
+          </span>
+        </button>
+
+        <p className="flex items-center gap-2 font-mono text-[12px] tracking-[0.08em]">
+          {(["en", "es"] as const).map((l, i) => (
+            <span key={l} className="flex items-center gap-2">
+              {i > 0 && <span className="text-white/45">/</span>}
+              <button
+                type="button"
+                className={`uppercase transition-colors ${
+                  lang === l ? "text-white" : "text-white/45 hover:text-white"
+                }`}
+                onClick={() => switchLang(l)}
+              >
+                {l}
+              </button>
+            </span>
+          ))}
+        </p>
+      </div>
+
+      {/* ── Wordmark (справа сверху) ── */}
       <button
         type="button"
         aria-label="Go to profile"
-        className="fixed right-6 top-6 z-[60] text-[13px] tracking-[0.14em] text-white mix-blend-difference md:right-8"
+        className="fixed right-6 top-6 z-[70] text-[13px] tracking-[0.14em] text-white mix-blend-difference md:right-8"
         onClick={() => {
           scrollToScreen(authorId);
           setMenuOpen(false);
@@ -355,44 +512,6 @@ export default function Home() {
       >
         13 | 14
       </button>
-
-      {/* ── Клик мимо меню закрывает его ── */}
-      <div
-        className={`fixed inset-0 z-40 ${menuOpen ? "" : "pointer-events-none"}`}
-        onClick={() => setMenuOpen(false)}
-      />
-
-      {/* ── Overlay-меню: прозрачная колонка под кнопкой ── */}
-      <nav
-        aria-hidden={!menuOpen}
-        className={`fixed left-6 top-16 z-50 w-[240px] text-white mix-blend-difference transition-[opacity,transform] duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] md:left-8 ${
-          menuOpen
-            ? "translate-y-0 opacity-100"
-            : "pointer-events-none -translate-y-2 opacity-0"
-        }`}
-      >
-        <ul className="space-y-3">
-          {menuItems.map((item) => (
-            <li key={item.id}>
-              <button
-                type="button"
-                className={`text-[15px] font-medium tracking-[0.08em] transition-[transform,opacity] duration-300 hover:translate-x-2 ${
-                  activeScreenId === item.id ? "opacity-100" : "opacity-80"
-                }`}
-                onClick={() => {
-                  scrollToScreen(item.id);
-                  setMenuOpen(false);
-                }}
-              >
-                {item.label}
-              </button>
-            </li>
-          ))}
-        </ul>
-        <p className="mt-6 max-w-[300px] text-[12px] font-light leading-[1.55] text-white/50">
-          Technical Director &amp; Producer of live brand events.
-        </p>
-      </nav>
 
       {/* ── Scroll hint ── */}
       <div
@@ -443,7 +562,7 @@ export default function Home() {
           <div className="absolute bottom-8 left-6 right-6 z-10 space-y-1 md:hidden">
             <p className="text-base tracking-tight text-white">Nurzhan Mukhitov</p>
             <p className="text-[10px] tracking-[0.16em] text-white/60">
-              TECHNICAL DIRECTOR &amp; PRODUCER
+              {c.role}
             </p>
             <p className="pt-1 text-[10px] tracking-[0.14em] text-white/55">
               info@13-14.space
@@ -458,29 +577,21 @@ export default function Home() {
                   Nurzhan Mukhitov
                 </p>
                 <p className="text-[11px] tracking-[0.16em] text-white/60">
-                  TECHNICAL DIRECTOR &amp; PRODUCER
+                  {c.role}
                 </p>
               </div>
               <p className="text-[13px] leading-relaxed text-white/85">
-                Technical director and producer of live brand experiences. 15+
-                years turning ambitious concepts into events that run flawlessly
-                — on time, on site, in front of an audience.
+                {c.about1}
               </p>
               <p className="text-[13px] leading-relaxed text-white/70">
-                I lead the technical side of premieres, brand activations, and
-                experiential events end to end — concept and technical design,
-                production, and on-site delivery. Work spans automotive, tech,
-                and finance brands across Europe, the Middle East, and beyond.
+                {c.about2}
               </p>
               <div className="space-y-1.5">
                 <p className="text-[11px] tracking-[0.16em] text-white/45">
-                  CAPABILITIES
+                  {c.capsLabel}
                 </p>
                 <p className="text-[12px] leading-relaxed text-white/70">
-                  Technical direction &amp; show control · End-to-end production
-                  · LED, projection &amp; holography · Interactive installations
-                  · Vendor, budget &amp; schedule management · International
-                  turnkey delivery
+                  {c.caps}
                 </p>
               </div>
               <p className="text-[12px] tracking-[0.1em] text-white/55">
@@ -493,7 +604,7 @@ export default function Home() {
         {/* ── Project screens ── */}
         {projectScreens.map((screen, index) => {
           const dark = screen.theme === "dark";
-          const note = projectNotes[index];
+          const note = notes[index];
           return (
             <section
               key={screen.id}
@@ -549,12 +660,12 @@ export default function Home() {
           <div className="flex h-full flex-col justify-center px-6 md:px-8">
             <div className="mx-auto w-full max-w-[440px] space-y-10">
               <p className="reveal-blur text-[11px] tracking-[0.16em] text-white/45">
-                CONTACT
+                {c.contactLabel}
               </p>
               <div className="reveal-blur space-y-1">
                 <p className="text-lg tracking-tight">Nurzhan Mukhitov</p>
                 <p className="text-[11px] tracking-[0.16em] text-white/60">
-                  TECHNICAL DIRECTOR &amp; PRODUCER
+                  {c.role}
                 </p>
               </div>
               <div
