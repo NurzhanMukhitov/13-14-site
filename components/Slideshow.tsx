@@ -5,19 +5,25 @@ import { useEffect, useState } from "react";
 /**
  * Авто-слайдшоу с кросс-фейдом. Фото стекаются absolute inset-0 —
  * контейнер должен быть position:relative + overflow-hidden.
+ * Когда экран не активен (накрыт шторкой другого экрана), слайдшоу
+ * замирает: анимация под накрытием зря жгёт GPU и может просвечивать
+ * субпиксельным швом на дробных высотах вьюпорта.
  */
 export function Slideshow({
   images,
   alt,
   interval = 3800,
+  active = true,
 }: {
   images: string[];
   alt: string;
   interval?: number;
+  active?: boolean;
 }) {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
+    if (!active) return;
     if (images.length <= 1) return;
     if (
       typeof window !== "undefined" &&
@@ -29,7 +35,7 @@ export function Slideshow({
       setIndex((p) => (p + 1) % images.length);
     }, interval);
     return () => clearInterval(t);
-  }, [images.length, interval]);
+  }, [images.length, interval, active]);
 
   return (
     <>

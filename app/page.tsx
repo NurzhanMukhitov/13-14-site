@@ -542,7 +542,7 @@ export default function Home() {
       {/* ── Main vertical scroller ── */}
       <main
         ref={scrollerRef}
-        className="h-[100dvh] overflow-y-auto overflow-x-hidden scroll-smooth"
+        className="h-[100dvh] overflow-y-auto overflow-x-hidden scroll-smooth bg-black"
       >
         {/* ── Profile section (первый экран, наполним фото + текстом) ── */}
         <section
@@ -624,7 +624,11 @@ export default function Home() {
                   }`}
                 >
                   {screen.images && screen.images.length > 0 ? (
-                    <Slideshow images={screen.images} alt={screen.subtitle} />
+                    <Slideshow
+                      images={screen.images}
+                      alt={screen.subtitle}
+                      active={activeScreenId === screen.id}
+                    />
                   ) : (
                     <div
                       className={`h-full w-full ${
