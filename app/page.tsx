@@ -85,6 +85,37 @@ const projectScreens: ProjectScreen[] = [
     theme: "dark",
     images: ["/cases/tbank-festivals/1.jpg", "/cases/tbank-festivals/2.jpg", "/cases/tbank-festivals/4.jpg"],
   },
+  // Кейсы из CV — фото и описания появятся позже, пока рамка-заглушка.
+  {
+    id: "project-011",
+    title: "PROJECT 011",
+    subtitle: "Jetour T1 — Private Launch",
+    theme: "light",
+  },
+  {
+    id: "project-012",
+    title: "PROJECT 012",
+    subtitle: "Sber Business Conference 2026 — Sber City",
+    theme: "dark",
+  },
+  {
+    id: "project-013",
+    title: "PROJECT 013",
+    subtitle: "BMW Marathon Sponsorship — Moscow & Munich",
+    theme: "light",
+  },
+  {
+    id: "project-014",
+    title: "PROJECT 014",
+    subtitle: "Chery Tiggo 9 — Sky Screen Premiere",
+    theme: "dark",
+  },
+  {
+    id: "project-015",
+    title: "PROJECT 015",
+    subtitle: "OMODA C5 — Online Launch",
+    theme: "light",
+  },
 ];
 
 const projectNotes: Array<{ label: string; text: string }> = [

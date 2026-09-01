@@ -24,10 +24,14 @@ web
 ## Positioning
 
 Подтверждённый международный трек в технической дирекции и продакшне брендовых
-событий верхнего сегмента. Кейсы (иностранные первыми): Lamborghini 60th (Австрия),
-Lamborghini Dubai, Aston Martin, Mercedes-EQ, Samsung Galaxy S25, OMODA C7,
-T-Bank PAYvolution, Yandex Fabrika, Positive Technologies, T-Bank Music Festivals.
-Соседний кандидат не может честно скопировать этот список.
+событий верхнего сегмента. Кейсы с фото (иностранные первыми): Lamborghini 60th
+(Австрия), Lamborghini Dubai, Aston Martin, Mercedes-EQ, Samsung Galaxy S25,
+OMODA C7, T-Bank PAYvolution, Yandex Fabrika, Positive Technologies, T-Bank Music
+Festivals. Кейсы из CV, добавлены рамками без фото (материалы пользователь
+пришлёт): Jetour T1 (частный запуск), Sber Business Conference 2026 (Sber City),
+BMW Marathon Sponsorship (Москва/Мюнхен), Chery Tiggo 9 (Sky Screen), OMODA C5
+(онлайн-запуск). CV и сайт сверены 2026-09-01; OMODA C7 и C5 — разные проекты,
+оба остаются. Соседний кандидат не может честно скопировать этот список.
 
 ## Operating Context
 
