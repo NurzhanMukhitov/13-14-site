@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import ProfileCard from "@/components/ProfileCard";
 import { Slideshow } from "@/components/Slideshow";
-import { Menu, X } from "lucide-react";
 
 type ProjectScreen = {
   id: string;
@@ -168,12 +167,20 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showHint, setShowHint] = useState(false);
 
-  // Порядок экранов: Profile первым, затем проекты.
-  const screenIds = [authorId, ...projectScreens.map((s) => s.id)];
+  const contactId = "contact";
 
-  const navItems = [
-    { id: authorId, label: "PROFILE" },
-    ...projectScreens.map((screen) => ({ id: screen.id, label: screen.title })),
+  // Порядок экранов: Profile первым, затем проекты, Contact последним.
+  const screenIds = [
+    authorId,
+    ...projectScreens.map((s) => s.id),
+    contactId,
+  ];
+
+  // Бургер-меню: три раздела, без выделения цветом.
+  const menuItems = [
+    { id: authorId, label: "ABOUT" },
+    { id: "project-001", label: "PROJECTS" },
+    { id: contactId, label: "CONTACT" },
   ];
 
   // Track active screen on scroll
@@ -305,67 +312,72 @@ export default function Home() {
   // Hint color based on current screen theme
   const activeScreen = projectScreens.find((s) => s.id === activeScreenId);
   const hintDark =
-    activeScreen?.theme === "dark" || activeScreenId === authorId;
+    activeScreen?.theme === "dark" ||
+    activeScreenId === authorId ||
+    activeScreenId === contactId;
 
   return (
     <>
-      {/* ── Desktop nav (md+) ── */}
-      <nav className="fixed left-0 top-0 z-50 hidden w-full items-center gap-8 overflow-x-auto px-8 py-6 text-[11px] tracking-[0.14em] text-white mix-blend-difference md:flex">
-        {navItems.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            className={`shrink-0 transition-opacity ${
-              activeScreenId === item.id ? "opacity-100" : "opacity-70"
-            }`}
-            onClick={() => scrollToScreen(item.id)}
-          >
-            <span className="nav-roll">
-              <span>{item.label}</span>
-              <span aria-hidden="true">{item.label}</span>
-            </span>
-          </button>
-        ))}
-      </nav>
+      {/* ── Burger button (все брейкпоинты, слева сверху) ── */}
+      <button
+        type="button"
+        aria-label={menuOpen ? "Close menu" : "Open menu"}
+        aria-expanded={menuOpen}
+        className="fixed left-6 top-6 z-[60] flex h-5 w-[30px] flex-col justify-between text-white mix-blend-difference md:left-8"
+        onClick={() => setMenuOpen((v) => !v)}
+      >
+        <span
+          className={`h-[3px] w-full bg-white transition-transform duration-300 ${
+            menuOpen ? "translate-y-[8.5px] rotate-45" : ""
+          }`}
+        />
+        <span
+          className={`h-[3px] w-full bg-white transition-opacity duration-300 ${
+            menuOpen ? "opacity-0" : ""
+          }`}
+        />
+        <span
+          className={`h-[3px] w-full bg-white transition-transform duration-300 ${
+            menuOpen ? "-translate-y-[8.5px] -rotate-45" : ""
+          }`}
+        />
+      </button>
 
-      {/* ── Mobile header (< md) ── */}
-      <div className="fixed left-0 top-0 z-50 flex w-full items-center justify-between px-6 py-5 text-white mix-blend-difference md:hidden">
-        <button
-          type="button"
-          aria-label="Go to profile"
-          className="text-[11px] tracking-[0.14em]"
-          onClick={() => scrollToScreen(authorId)}
-        >
-          13 | 14
-        </button>
-        <button
-          type="button"
-          aria-label="Open menu"
-          onClick={() => setMenuOpen(true)}
-        >
-          <Menu size={18} strokeWidth={1.5} />
-        </button>
-      </div>
+      {/* ── Wordmark (справа сверху, как логотип в референсе) ── */}
+      <button
+        type="button"
+        aria-label="Go to profile"
+        className="fixed right-6 top-6 z-[60] text-[13px] tracking-[0.14em] text-white mix-blend-difference md:right-8"
+        onClick={() => {
+          scrollToScreen(authorId);
+          setMenuOpen(false);
+        }}
+      >
+        13 | 14
+      </button>
 
-      {/* ── Mobile overlay menu ── */}
-      {menuOpen && (
-        <div className="fixed inset-0 z-[100] flex flex-col bg-black px-8 py-5 text-white">
-          <div className="flex justify-end">
-            <button
-              type="button"
-              aria-label="Close menu"
-              onClick={() => setMenuOpen(false)}
-            >
-              <X size={18} strokeWidth={1.5} />
-            </button>
-          </div>
-          <nav className="mt-14 flex flex-col gap-7">
-            {navItems.map((item) => (
+      {/* ── Клик мимо меню закрывает его ── */}
+      <div
+        className={`fixed inset-0 z-40 ${menuOpen ? "" : "pointer-events-none"}`}
+        onClick={() => setMenuOpen(false)}
+      />
+
+      {/* ── Overlay-меню: прозрачная колонка под кнопкой ── */}
+      <nav
+        aria-hidden={!menuOpen}
+        className={`fixed left-6 top-16 z-50 w-[240px] text-white mix-blend-difference transition-[opacity,transform] duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] md:left-8 ${
+          menuOpen
+            ? "translate-y-0 opacity-100"
+            : "pointer-events-none -translate-y-2 opacity-0"
+        }`}
+      >
+        <ul className="space-y-3">
+          {menuItems.map((item) => (
+            <li key={item.id}>
               <button
-                key={item.id}
                 type="button"
-                className={`text-left text-[11px] tracking-[0.14em] transition-opacity hover:opacity-100 ${
-                  activeScreenId === item.id ? "opacity-100" : "opacity-50"
+                className={`text-[15px] font-medium tracking-[0.08em] transition-[transform,opacity] duration-300 hover:translate-x-2 ${
+                  activeScreenId === item.id ? "opacity-100" : "opacity-80"
                 }`}
                 onClick={() => {
                   scrollToScreen(item.id);
@@ -374,10 +386,13 @@ export default function Home() {
               >
                 {item.label}
               </button>
-            ))}
-          </nav>
-        </div>
-      )}
+            </li>
+          ))}
+        </ul>
+        <p className="mt-6 max-w-[300px] text-[12px] font-light leading-[1.55] text-white/50">
+          Technical Director &amp; Producer of live brand events.
+        </p>
+      </nav>
 
       {/* ── Scroll hint ── */}
       <div
@@ -525,6 +540,65 @@ export default function Home() {
             </section>
           );
         })}
+
+        {/* ── Contact section (последний экран) ── */}
+        <section
+          id={contactId}
+          className="sticky top-0 h-[100dvh] w-full overflow-hidden bg-black text-white"
+        >
+          <div className="flex h-full flex-col justify-center px-6 md:px-8">
+            <div className="mx-auto w-full max-w-[440px] space-y-10">
+              <p className="reveal-blur text-[11px] tracking-[0.16em] text-white/45">
+                CONTACT
+              </p>
+              <div className="reveal-blur space-y-1">
+                <p className="text-lg tracking-tight">Nurzhan Mukhitov</p>
+                <p className="text-[11px] tracking-[0.16em] text-white/60">
+                  TECHNICAL DIRECTOR &amp; PRODUCER
+                </p>
+              </div>
+              <div
+                className="reveal-blur space-y-4 text-[14px]"
+                style={{ "--reveal-delay": "0.12s" } as React.CSSProperties}
+              >
+                <a
+                  href="https://t.me/nmk_one"
+                  target="_blank"
+                  rel="noopener"
+                  className="block text-white/85 transition-opacity hover:opacity-60"
+                >
+                  @nmk_one
+                </a>
+                <div className="space-y-2">
+                  <a
+                    href="tel:+34654265169"
+                    className="block text-white/85 transition-opacity hover:opacity-60"
+                  >
+                    <span className="mr-3 text-[11px] tracking-[0.16em] text-white/45">
+                      ESP
+                    </span>
+                    +34 654 265 169
+                  </a>
+                  <a
+                    href="tel:+79264679303"
+                    className="block text-white/85 transition-opacity hover:opacity-60"
+                  >
+                    <span className="mr-3 text-[11px] tracking-[0.16em] text-white/45">
+                      RUS
+                    </span>
+                    +7 926 467 93 03
+                  </a>
+                </div>
+                <a
+                  href="mailto:info@13-14.space"
+                  className="block text-white/85 transition-opacity hover:opacity-60"
+                >
+                  info@13-14.space
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
     </>
   );

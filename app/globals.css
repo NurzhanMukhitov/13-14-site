@@ -176,28 +176,3 @@
   }
 }
 
-/* ── Ролл лейбла в навигации: пара строк уезжает вверх на одну строку ── */
-.nav-roll {
-  position: relative;
-  display: block;
-  overflow: hidden;
-}
-.nav-roll > span {
-  display: block;
-  transition: transform 0.3s ease-out;
-}
-.nav-roll > span:last-child {
-  position: absolute;
-  left: 0;
-  top: 100%;
-}
-button:hover .nav-roll > span {
-  transform: translateY(-100%);
-}
-@media (prefers-reduced-motion: reduce) {
-  .nav-roll > span,
-  button:hover .nav-roll > span {
-    transition: none;
-    transform: none;
-  }
-}
