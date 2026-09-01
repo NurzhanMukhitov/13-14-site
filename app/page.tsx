@@ -20,7 +20,7 @@ const projectScreens: ProjectScreen[] = [
     title: "PROJECT 001",
     subtitle: "Lamborghini 60th Anniversary — Austria",
     theme: "light",
-    images: ["/cases/lambo-austria/1.jpg", "/cases/lambo-austria/2.jpg", "/cases/lambo-austria/3.jpg", "/cases/lambo-austria/4.jpg"],
+    images: ["/cases/lambo-austria/1.jpg", "/cases/lambo-austria/4.jpg"],
   },
   {
     id: "project-002",
@@ -76,14 +76,14 @@ const projectScreens: ProjectScreen[] = [
     title: "PROJECT 009",
     subtitle: "Positive Technologies — Games of the Future",
     theme: "light",
-    images: ["/cases/positive-technologies/1.jpg", "/cases/positive-technologies/2.jpg", "/cases/positive-technologies/3.jpg", "/cases/positive-technologies/4.jpg"],
+    images: ["/cases/positive-technologies/4.jpg", "/cases/positive-technologies/2.jpg", "/cases/positive-technologies/3.jpg"],
   },
   {
     id: "project-010",
     title: "PROJECT 010",
     subtitle: "T-Bank — Music Festivals",
     theme: "dark",
-    images: ["/cases/tbank-festivals/1.jpg", "/cases/tbank-festivals/2.jpg", "/cases/tbank-festivals/3.jpg", "/cases/tbank-festivals/4.jpg"],
+    images: ["/cases/tbank-festivals/1.jpg", "/cases/tbank-festivals/2.jpg", "/cases/tbank-festivals/4.jpg"],
   },
 ];
 
