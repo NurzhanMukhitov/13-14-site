@@ -13,17 +13,17 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "13 | 14 — Digital visual artist",
+  title: "Nurzhan Mukhitov — Technical Director & Producer",
   description:
-    "Digital visual artist. From generative systems to interactive environments. Code, motion, structure.",
+    "Technical Director & Producer of live brand events. Lamborghini, Aston Martin, Mercedes-EQ, Samsung, T-Bank.",
   icons: {
     icon: "/favicon.ico",
   },
   openGraph: {
-    title: "13 | 14 — Digital visual artist",
+    title: "Nurzhan Mukhitov — Technical Director & Producer",
     description:
-      "From generative systems to interactive environments. Code, motion, structure.",
-    url: "https://nurzhanmukhitov.github.io/13.14",
+      "Technical Director & Producer of live brand events. Lamborghini, Aston Martin, Mercedes-EQ, Samsung, T-Bank.",
+    url: "https://13-14-site.vercel.app",
     type: "website",
   },
 };
@@ -34,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru">
+    <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
