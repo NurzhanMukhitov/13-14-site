@@ -346,12 +346,12 @@ export default function Home() {
       window.clearTimeout(timer);
       timer = window.setTimeout(() => {
         const h = root.clientHeight || 1;
-        const target =
-          Math.min(
-            Math.round(root.scrollTop / h),
-            Math.round((root.scrollHeight - h) / h),
-          ) * h;
-        if (Math.abs(target - root.scrollTop) > 1) {
+        // Жёсткий клэмп к реальному концу скролла: округлённая цель может
+        // оказаться недостижимой (дробные высоты) — smooth-скролл тогда
+        // перезапускается бесконечно и экран дёргается.
+        const maxTop = root.scrollHeight - h;
+        const target = Math.min(Math.round(root.scrollTop / h) * h, maxTop);
+        if (Math.abs(target - root.scrollTop) > 2) {
           root.scrollTo({ top: target, behavior: reduced ? "auto" : "smooth" });
         }
       }, 200);
@@ -397,12 +397,19 @@ export default function Home() {
     return () => root.removeEventListener("scroll", hideHint);
   }, []);
 
-  const scrollToScreen = (id: string) => {
+  const scrollToScreen = (id: string, behavior: ScrollBehavior = "smooth") => {
     const root = scrollerRef.current;
     if (!root) return;
     const index = screenIds.indexOf(id);
     if (index < 0) return;
-    root.scrollTo({ top: index * root.clientHeight, behavior: "smooth" });
+    root.scrollTo({ top: index * root.clientHeight, behavior });
+  };
+
+  // Из меню — мгновенный прыжок под открытой плитой, потом плита поднимается
+  // и открывает уже нужный раздел. Никакой промотки через все проекты.
+  const jumpFromMenu = (id: string) => {
+    scrollToScreen(id, "instant");
+    window.setTimeout(() => setMenuOpen(false), 350);
   };
 
   // Hint color based on current screen theme
@@ -429,10 +436,7 @@ export default function Home() {
                   type="button"
                   className="bm-link whitespace-nowrap text-[clamp(26px,7vw,34px)] font-medium tracking-[0.02em] text-white md:text-[clamp(1.1rem,2vw,1.9rem)]"
                   style={{ "--i": i } as React.CSSProperties}
-                  onClick={() => {
-                    scrollToScreen(item.id);
-                    setMenuOpen(false);
-                  }}
+                  onClick={() => jumpFromMenu(item.id)}
                 >
                   {item.label}
                 </button>
@@ -506,8 +510,11 @@ export default function Home() {
         aria-label="Go to profile"
         className="fixed right-6 top-6 z-[70] text-[13px] tracking-[0.14em] text-white mix-blend-difference md:right-8"
         onClick={() => {
-          scrollToScreen(authorId);
-          setMenuOpen(false);
+          if (menuOpen) {
+            jumpFromMenu(authorId);
+          } else {
+            scrollToScreen(authorId, "instant");
+          }
         }}
       >
         13 | 14
@@ -564,9 +571,6 @@ export default function Home() {
             <p className="text-[10px] tracking-[0.16em] text-white/60">
               {c.role}
             </p>
-            <p className="pt-1 text-[10px] tracking-[0.14em] text-white/55">
-              info@13-14.space
-            </p>
           </div>
 
           {/* Desktop: about panel on the right */}
@@ -594,9 +598,6 @@ export default function Home() {
                   {c.caps}
                 </p>
               </div>
-              <p className="text-[12px] tracking-[0.1em] text-white/55">
-                info@13-14.space
-              </p>
             </div>
           </div>
         </section>

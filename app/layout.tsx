@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     title: "Nurzhan Mukhitov — Technical Director & Producer",
     description:
       "Technical Director & Producer of live brand events. Lamborghini, Aston Martin, Mercedes-EQ, Samsung, T-Bank.",
-    url: "https://13-14-site.vercel.app",
+    url: "https://studio-1314.online",
     type: "website",
   },
 };
