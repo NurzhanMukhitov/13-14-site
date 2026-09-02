@@ -10,6 +10,14 @@ const inter = localFont({
   display: "swap",
 });
 
+// Montserrat Black: дисплей — имя и заголовки кейсов.
+const montserrat = localFont({
+  src: "./fonts/Montserrat-Black.ttf",
+  variable: "--font-montserrat",
+  weight: "900",
+  display: "swap",
+});
+
 // IBM Plex Mono: техническая метаинформация, теги, числа.
 const plexMono = localFont({
   src: [
@@ -52,7 +60,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${plexMono.variable} font-sans antialiased bg-background text-foreground`}
+        className={`${inter.variable} ${montserrat.variable} ${plexMono.variable} font-sans antialiased bg-background text-foreground`}
       >
         {children}
       </body>

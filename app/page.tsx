@@ -637,24 +637,21 @@ export default function Home() {
 
           {/* Mobile: name + role at bottom-left */}
           <div className="absolute bottom-8 left-6 right-6 z-10 space-y-2 md:hidden">
-            <p className="text-[44px] font-black leading-[1.04] tracking-[0.01em] text-white">
-              Nurzhan
-              <br />
-              Mukhitov
+            <p className="font-display text-[32px] font-black leading-[1.05] tracking-[0.01em] text-white">
+              Nurzhan Mukhitov
             </p>
             <p className="text-[10px] tracking-[0.16em] text-white/60">
               {c.role}
             </p>
           </div>
 
-          {/* Desktop: about panel on the right */}
-          <div className="hidden flex-1 overflow-y-auto px-8 pb-8 pt-14 md:block">
+          {/* Desktop: about panel on the right; верх текста = верх фото
+              (карточка 80svh/max 540px, центрирована — повторяем её отступ) */}
+          <div className="hidden flex-1 overflow-y-auto px-8 pb-8 pt-[calc((100dvh-min(80svh,540px))/2+32px)] md:block">
             <div className="max-w-[640px] space-y-5">
               <div className="space-y-2">
-                <h2 className="text-[clamp(44px,4.5vw,64px)] font-black leading-[1.04] tracking-[0.01em] text-white">
-                  Nurzhan
-                  <br />
-                  Mukhitov
+                <h2 className="whitespace-nowrap font-display text-[clamp(30px,3.2vw,46px)] font-black leading-[1.05] tracking-[0.01em] text-white">
+                  Nurzhan Mukhitov
                 </h2>
                 <p className="text-[11px] tracking-[0.16em] text-white/60">
                   {c.role}
@@ -729,7 +726,7 @@ export default function Home() {
                   )}
                   {/* Полупрозрачная накладка-шторка на всё фото, текст на подкладке */}
                   <div className="absolute inset-0 flex flex-col justify-end bg-black/55 px-5 pb-6 md:px-7 md:pb-8">
-                    <p className="mb-2 text-[clamp(18px,2vw,26px)] font-bold leading-tight tracking-tight text-white">
+                    <p className="mb-2 font-display text-[clamp(17px,1.8vw,24px)] font-black leading-tight text-white">
                       {screen.subtitle}
                     </p>
                     {note?.text ? (
@@ -759,7 +756,7 @@ export default function Home() {
                 {c.contactLabel}
               </p>
               <div className="reveal-blur space-y-1">
-                <p className="text-[34px] font-black leading-[1.04] tracking-[0.01em]">
+                <p className="font-display text-[30px] font-black leading-[1.05] tracking-[0.01em]">
                   Nurzhan Mukhitov
                 </p>
                 <p className="text-[11px] tracking-[0.16em] text-white/60">
