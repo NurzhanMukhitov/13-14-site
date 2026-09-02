@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Space_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 
@@ -10,11 +11,11 @@ const inter = localFont({
   display: "swap",
 });
 
-// Montserrat Black: дисплей — имя и заголовки кейсов.
-const montserrat = localFont({
-  src: "./fonts/Montserrat-Black.ttf",
-  variable: "--font-montserrat",
-  weight: "900",
+// Space Mono: дисплей — имя и заголовки кейсов (Bold, не тяжелее).
+const spaceMono = Space_Mono({
+  weight: ["400", "700"],
+  subsets: ["latin"],
+  variable: "--font-space-mono",
   display: "swap",
 });
 
@@ -60,7 +61,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${montserrat.variable} ${plexMono.variable} font-sans antialiased bg-background text-foreground`}
+        className={`${inter.variable} ${spaceMono.variable} ${plexMono.variable} font-sans antialiased bg-background text-foreground`}
       >
         {children}
       </body>
