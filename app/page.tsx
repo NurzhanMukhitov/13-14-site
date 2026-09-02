@@ -637,7 +637,7 @@ export default function Home() {
 
           {/* Mobile: name + role at bottom-left */}
           <div className="absolute bottom-8 left-6 right-6 z-10 space-y-2 md:hidden">
-            <p className="font-display text-[30px] font-bold leading-[1.05] tracking-[0.01em] text-white">
+            <p className="font-display text-[30px] font-normal leading-[1.05] tracking-[0.01em] text-white">
               Nurzhan Mukhitov
             </p>
             <p className="text-[10px] tracking-[0.16em] text-white/60">
@@ -650,7 +650,7 @@ export default function Home() {
           <div className="hidden flex-1 overflow-y-auto px-8 pb-8 pt-[calc((100dvh-min(80svh,540px))/2+32px)] md:block">
             <div className="max-w-[640px] space-y-5">
               <div className="space-y-2">
-                <h2 className="whitespace-nowrap font-display text-[clamp(28px,3vw,44px)] font-bold leading-[1.05] tracking-[0.01em] text-white">
+                <h2 className="whitespace-nowrap font-display text-[clamp(28px,3vw,44px)] font-normal leading-[1.05] tracking-[0.01em] text-white">
                   Nurzhan Mukhitov
                 </h2>
                 <p className="text-[11px] tracking-[0.16em] text-white/60">
@@ -726,7 +726,7 @@ export default function Home() {
                   )}
                   {/* Полупрозрачная накладка-шторка на всё фото, текст на подкладке */}
                   <div className="absolute inset-0 flex flex-col justify-end bg-black/55 px-5 pb-6 md:px-7 md:pb-8">
-                    <p className="mb-2 font-display text-[clamp(16px,1.7vw,22px)] font-bold leading-tight text-white">
+                    <p className="mb-2 font-display text-[clamp(16px,1.7vw,22px)] font-normal leading-tight text-white">
                       {screen.subtitle}
                     </p>
                     {note?.text ? (
@@ -756,7 +756,7 @@ export default function Home() {
                 {c.contactLabel}
               </p>
               <div className="reveal-blur space-y-1">
-                <p className="font-display text-[28px] font-bold leading-[1.05] tracking-[0.01em]">
+                <p className="font-display text-[28px] font-normal leading-[1.05] tracking-[0.01em]">
                   Nurzhan Mukhitov
                 </p>
                 <p className="text-[11px] tracking-[0.16em] text-white/60">

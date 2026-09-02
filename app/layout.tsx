@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Space_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 
@@ -8,14 +7,6 @@ const inter = localFont({
   src: "./fonts/InterVariable.woff2",
   variable: "--font-inter",
   weight: "100 900",
-  display: "swap",
-});
-
-// Space Mono: дисплей — имя и заголовки кейсов (Bold, не тяжелее).
-const spaceMono = Space_Mono({
-  weight: ["400", "700"],
-  subsets: ["latin"],
-  variable: "--font-space-mono",
   display: "swap",
 });
 
@@ -61,7 +52,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${spaceMono.variable} ${plexMono.variable} font-sans antialiased bg-background text-foreground`}
+        className={`${inter.variable} ${plexMono.variable} font-sans antialiased bg-background text-foreground`}
       >
         {children}
       </body>
