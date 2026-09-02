@@ -578,7 +578,7 @@ export default function Home() {
       <button
         type="button"
         aria-label="Go to profile"
-        className="fixed right-6 top-6 z-[70] text-[13px] tracking-[0.14em] text-white mix-blend-difference md:right-8"
+        className="fixed right-6 top-6 z-[70] font-mono text-[13px] tracking-[0.14em] text-white mix-blend-difference md:right-8"
         onClick={() => {
           if (menuOpen) {
             jumpFromMenu(authorId);
@@ -637,7 +637,7 @@ export default function Home() {
 
           {/* Mobile: name + role at bottom-left */}
           <div className="absolute bottom-8 left-6 right-6 z-10 space-y-2 md:hidden">
-            <p className="text-3xl font-bold leading-[0.95] tracking-tight text-white">
+            <p className="text-3xl font-black leading-[0.95] tracking-tight text-white">
               Nurzhan
               <br />
               Mukhitov
@@ -651,7 +651,7 @@ export default function Home() {
           <div className="hidden flex-1 overflow-y-auto px-8 pb-10 pt-20 md:block">
             <div className="max-w-[640px] space-y-5">
               <div className="space-y-2">
-                <h2 className="text-[clamp(32px,3vw,42px)] font-bold leading-[0.95] tracking-tight text-white">
+                <h2 className="text-[clamp(32px,3vw,42px)] font-black leading-[0.95] tracking-tight text-white">
                   Nurzhan
                   <br />
                   Mukhitov
@@ -670,17 +670,17 @@ export default function Home() {
                   {paragraph}
                 </p>
               ))}
-              <div className="grid grid-cols-1 gap-x-6 gap-y-5 pt-1 md:grid-cols-4">
+              <div className="grid grid-cols-1 gap-x-6 gap-y-5 pt-1 font-mono md:grid-cols-4">
                 {c.columns.map((col) => (
                   <div key={col.h} className="space-y-1.5">
-                    <p className="text-[11px] tracking-[0.16em] text-white/45">
+                    <p className="text-[10px] font-medium tracking-[0.14em] text-white/45">
                       {col.h}
                     </p>
                     <ul className="space-y-1">
                       {col.items.map((item) => (
                         <li
                           key={item}
-                          className="text-[12px] leading-snug text-white/70"
+                          className="text-[11px] leading-snug text-white/70"
                         >
                           {item}
                         </li>
@@ -729,7 +729,7 @@ export default function Home() {
                   )}
                   {/* Полупрозрачная накладка-шторка на всё фото, текст на подкладке */}
                   <div className="absolute inset-0 flex flex-col justify-end bg-black/55 px-5 pb-6 md:px-7 md:pb-8">
-                    <p className="mb-2 text-[11px] tracking-[0.16em] text-white/80">
+                    <p className="mb-2 text-[clamp(18px,2vw,26px)] font-bold leading-tight tracking-tight text-white">
                       {screen.subtitle}
                     </p>
                     {note?.text ? (
@@ -755,17 +755,19 @@ export default function Home() {
         >
           <div className="flex h-full flex-col justify-center px-6 md:px-8">
             <div className="mx-auto w-full max-w-[440px] space-y-10">
-              <p className="reveal-blur text-[11px] tracking-[0.16em] text-white/45">
+              <p className="reveal-blur font-mono text-[11px] font-medium tracking-[0.16em] text-white/45">
                 {c.contactLabel}
               </p>
               <div className="reveal-blur space-y-1">
-                <p className="text-lg tracking-tight">Nurzhan Mukhitov</p>
+                <p className="text-2xl font-black leading-[0.95] tracking-tight">
+                  Nurzhan Mukhitov
+                </p>
                 <p className="text-[11px] tracking-[0.16em] text-white/60">
                   {c.role}
                 </p>
               </div>
               <div
-                className="reveal-blur space-y-4 text-[14px]"
+                className="reveal-blur space-y-4 font-mono text-[13px]"
                 style={{ "--reveal-delay": "0.12s" } as React.CSSProperties}
               >
                 <a
@@ -790,7 +792,7 @@ export default function Home() {
                     href="tel:+34654265169"
                     className="block text-white/85 transition-opacity hover:opacity-60"
                   >
-                    <span className="mr-3 text-[11px] tracking-[0.16em] text-white/45">
+                    <span className="mr-3 text-[10px] font-medium tracking-[0.16em] text-white/45">
                       ESP
                     </span>
                     +34 654 265 169
@@ -799,7 +801,7 @@ export default function Home() {
                     href="tel:+79264679303"
                     className="block text-white/85 transition-opacity hover:opacity-60"
                   >
-                    <span className="mr-3 text-[11px] tracking-[0.16em] text-white/45">
+                    <span className="mr-3 text-[10px] font-medium tracking-[0.16em] text-white/45">
                       RUS
                     </span>
                     +7 926 467 93 03
