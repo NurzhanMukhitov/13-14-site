@@ -214,12 +214,49 @@ const COPY = {
     menuProjects: "PROJECTS",
     menuContact: "CONTACT",
     role: "TECHNICAL DIRECTOR & PRODUCER",
-    about1:
-      "Technical director and producer of live brand experiences. 15+ years turning ambitious concepts into events that run flawlessly — on time, on site, in front of an audience.",
-    about2:
-      "I lead the technical side of premieres, brand activations, and experiential events end to end — concept and technical design, production, and on-site delivery. Work spans automotive, tech, and finance brands across Europe, the Middle East, and beyond.",
-    capsLabel: "CAPABILITIES",
-    caps: "Technical direction & show control · End-to-end production · LED, projection & holography · Interactive installations · Vendor, budget & schedule management · International turnkey delivery",
+    about: [
+      "Technical projects rarely fall apart on site. They fall apart earlier, at the seam where the budget, the drawings and the actual dimensions of the room stop agreeing with each other. By the time the build starts, that gap already costs money and time nobody has.",
+      "That seam is where I stand. I run the technical side of an event in full: matching the project to the venue, building the budget, choosing contractors and holding them to it, answering for the build and for everything switching on at the appointed minute. Creative, catering and guests stay on the client's side.",
+      "I did that for fifteen years inside agency teams, where the date does not move and the brand sees the result once: dinner for sixty people in a working observatory, with stargazing alongside astronomers; a forty eight metre media canvas under the ceiling of a hall; a driving day on a Formula 1 circuit with sixteen cars and a guest route through the pit lane. Mercedes, Samsung, Lamborghini, Aston Martin, BMW, Sber, T-Bank.",
+      "Now I work directly, and the standard has not changed. A project starts with me walking the venue before anything at all has been ordered, and ends with me on site through the whole build and the whole show.",
+    ],
+    columns: [
+      {
+        h: "WHAT I DO",
+        items: [
+          "Technical direction",
+          "Show control",
+          "Technical design",
+          "Site inspection",
+          "Vendors and budget",
+          "Build supervision",
+          "Interactive and media",
+        ],
+      },
+      {
+        h: "SOFTWARE",
+        items: [
+          "Vectorworks",
+          "AutoCAD",
+          "SketchUp",
+          "Resolume",
+          "TouchDesigner",
+          "DMX, Art-Net, Dante",
+        ],
+      },
+      {
+        h: "LANGUAGES",
+        items: [
+          "Russian, native",
+          "English, professional",
+          "Spanish, in progress",
+        ],
+      },
+      {
+        h: "BASED",
+        items: ["Spain", "Projects across Europe and the Middle East"],
+      },
+    ],
     contactLabel: "CONTACT",
   },
   es: {
@@ -229,12 +266,45 @@ const COPY = {
     menuProjects: "PROYECTOS",
     menuContact: "CONTACTO",
     role: "DIRECTOR TÉCNICO Y PRODUCTOR",
-    about1:
-      "Director técnico y productor de experiencias de marca en vivo. Más de 15 años convirtiendo conceptos ambiciosos en eventos que funcionan a la perfección: a tiempo, in situ y frente al público.",
-    about2:
-      "Dirijo de principio a fin la parte técnica de estrenos, activaciones de marca y eventos experienciales: concepto y diseño técnico, producción y ejecución in situ. He trabajado con marcas de automoción, tecnología y finanzas en Europa, Oriente Medio y más allá.",
-    capsLabel: "CAPACIDADES",
-    caps: "Dirección técnica y control de show · Producción integral · LED, proyección y holografía · Instalaciones interactivas · Gestión de proveedores, presupuesto y calendario · Entrega llave en mano internacional",
+    about: [
+      "Los proyectos técnicos rara vez se caen en obra. Se caen antes, en la costura donde el presupuesto, los planos y las dimensiones reales de la sala dejan de coincidir. Cuando llega el montaje, ese desajuste ya cuesta dinero y tiempo que no hay.",
+      "En esa costura es donde estoy. Llevo la parte técnica de un evento completa: ajusto el proyecto al espacio, elaboro el presupuesto, elijo a los proveedores y los sostengo, respondo del montaje y de que todo arranque en el minuto previsto. El creativo, el catering y los invitados se quedan del lado del cliente.",
+      "Lo hice durante quince años dentro de equipos de agencia, donde la fecha no se mueve y la marca ve el resultado una sola vez: una cena para sesenta personas en un observatorio en funcionamiento, con observación de estrellas junto a astrónomos; un lienzo multimedia de cuarenta y ocho metros bajo el techo de la sala; una jornada de conducción en un circuito de Fórmula 1 con dieciséis coches y un recorrido de invitados por el pit lane. Mercedes, Samsung, Lamborghini, Aston Martin, BMW, Sber, T-Bank.",
+      "Ahora trabajo directamente, y el estándar no ha cambiado. Un proyecto empieza cuando piso el espacio antes de que se haya encargado nada, y termina conmigo en obra durante todo el montaje y todo el show.",
+    ],
+    columns: [
+      {
+        h: "QUÉ HAGO",
+        items: [
+          "Dirección técnica",
+          "Show control",
+          "Proyecto técnico",
+          "Site inspection",
+          "Proveedores y presupuesto",
+          "Supervisión de montaje",
+          "Interactivo y media",
+        ],
+      },
+      {
+        h: "SOFTWARE",
+        items: [
+          "Vectorworks",
+          "AutoCAD",
+          "SketchUp",
+          "Resolume",
+          "TouchDesigner",
+          "DMX, Art-Net, Dante",
+        ],
+      },
+      {
+        h: "IDIOMAS",
+        items: ["Ruso, nativo", "Inglés, profesional", "Español, en progreso"],
+      },
+      {
+        h: "BASE",
+        items: ["España", "Proyectos en Europa y Oriente Medio"],
+      },
+    ],
     contactLabel: "CONTACTO",
   },
 } as const;
@@ -423,7 +493,7 @@ export default function Home() {
     <>
       {/* ── Панель меню: чёрная плита, раскрывается сверху ── */}
       <nav
-        aria-hidden={!menuOpen}
+        inert={!menuOpen}
         className={`bm-panel fixed inset-0 z-[60] bg-black ${
           menuOpen ? "bm-panel--open" : ""
         }`}
@@ -566,37 +636,58 @@ export default function Home() {
           </div>
 
           {/* Mobile: name + role at bottom-left */}
-          <div className="absolute bottom-8 left-6 right-6 z-10 space-y-1 md:hidden">
-            <p className="text-base tracking-tight text-white">Nurzhan Mukhitov</p>
+          <div className="absolute bottom-8 left-6 right-6 z-10 space-y-2 md:hidden">
+            <p className="text-3xl font-bold leading-[0.95] tracking-tight text-white">
+              Nurzhan
+              <br />
+              Mukhitov
+            </p>
             <p className="text-[10px] tracking-[0.16em] text-white/60">
               {c.role}
             </p>
           </div>
 
           {/* Desktop: about panel on the right */}
-          <div className="hidden flex-1 overflow-y-auto px-8 pb-10 pt-24 md:block">
-            <div className="max-w-[440px] space-y-6">
-              <div className="space-y-1">
-                <p className="text-lg tracking-tight text-white">
-                  Nurzhan Mukhitov
-                </p>
+          <div className="hidden flex-1 overflow-y-auto px-8 pb-10 pt-20 md:block">
+            <div className="max-w-[640px] space-y-5">
+              <div className="space-y-2">
+                <h2 className="text-[clamp(32px,3vw,42px)] font-bold leading-[0.95] tracking-tight text-white">
+                  Nurzhan
+                  <br />
+                  Mukhitov
+                </h2>
                 <p className="text-[11px] tracking-[0.16em] text-white/60">
                   {c.role}
                 </p>
               </div>
-              <p className="text-[13px] leading-relaxed text-white/85">
-                {c.about1}
-              </p>
-              <p className="text-[13px] leading-relaxed text-white/70">
-                {c.about2}
-              </p>
-              <div className="space-y-1.5">
-                <p className="text-[11px] tracking-[0.16em] text-white/45">
-                  {c.capsLabel}
+              {c.about.map((paragraph, i) => (
+                <p
+                  key={i}
+                  className={`text-[12.5px] leading-[1.55] ${
+                    i === 0 ? "text-white/85" : "text-white/70"
+                  }`}
+                >
+                  {paragraph}
                 </p>
-                <p className="text-[12px] leading-relaxed text-white/70">
-                  {c.caps}
-                </p>
+              ))}
+              <div className="grid grid-cols-1 gap-x-6 gap-y-5 pt-1 md:grid-cols-4">
+                {c.columns.map((col) => (
+                  <div key={col.h} className="space-y-1.5">
+                    <p className="text-[11px] tracking-[0.16em] text-white/45">
+                      {col.h}
+                    </p>
+                    <ul className="space-y-1">
+                      {col.items.map((item) => (
+                        <li
+                          key={item}
+                          className="text-[12px] leading-snug text-white/70"
+                        >
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
