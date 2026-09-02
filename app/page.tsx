@@ -637,7 +637,7 @@ export default function Home() {
 
           {/* Mobile: name + role at bottom-left */}
           <div className="absolute bottom-8 left-6 right-6 z-10 space-y-2 md:hidden">
-            <p className="text-3xl font-black leading-[0.95] tracking-tight text-white">
+            <p className="text-[44px] font-black leading-[1.04] tracking-[0.01em] text-white">
               Nurzhan
               <br />
               Mukhitov
@@ -648,10 +648,10 @@ export default function Home() {
           </div>
 
           {/* Desktop: about panel on the right */}
-          <div className="hidden flex-1 overflow-y-auto px-8 pb-10 pt-20 md:block">
+          <div className="hidden flex-1 overflow-y-auto px-8 pb-8 pt-14 md:block">
             <div className="max-w-[640px] space-y-5">
               <div className="space-y-2">
-                <h2 className="text-[clamp(32px,3vw,42px)] font-black leading-[0.95] tracking-tight text-white">
+                <h2 className="text-[clamp(44px,4.5vw,64px)] font-black leading-[1.04] tracking-[0.01em] text-white">
                   Nurzhan
                   <br />
                   Mukhitov
@@ -759,7 +759,7 @@ export default function Home() {
                 {c.contactLabel}
               </p>
               <div className="reveal-blur space-y-1">
-                <p className="text-2xl font-black leading-[0.95] tracking-tight">
+                <p className="text-[34px] font-black leading-[1.04] tracking-[0.01em]">
                   Nurzhan Mukhitov
                 </p>
                 <p className="text-[11px] tracking-[0.16em] text-white/60">
