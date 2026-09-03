@@ -805,10 +805,10 @@ export default function Home() {
                   </a>
                 </div>
                 <a
-                  href="mailto:info@13-14.space"
+                  href="mailto:info@studio-1314.online"
                   className="block text-white/85 transition-opacity hover:opacity-60"
                 >
-                  info@13-14.space
+                  info@studio-1314.online
                 </a>
               </div>
             </div>
