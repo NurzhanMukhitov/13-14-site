@@ -234,6 +234,8 @@ const COPY = {
       },
     ],
     contactLabel: "CONTACT",
+    projectsTitle: "Projects",
+    projectsCount: "SELECTED CASES",
   },
   es: {
     burgerMenu: "Menú",
@@ -282,6 +284,8 @@ const COPY = {
       },
     ],
     contactLabel: "CONTACTO",
+    projectsTitle: "Proyectos",
+    projectsCount: "CASOS SELECCIONADOS",
   },
 } as const;
 
@@ -311,29 +315,32 @@ export default function Home() {
 
   const contactId = "contact";
 
-  // Порядок экранов: Profile первым, затем проекты, Contact последним.
-  const screenIds = [
-    authorId,
-    ...projectScreens.map((s) => s.id),
-    contactId,
-  ];
-
   // Бургер-меню: три раздела, без выделения цветом.
+  // PROJECTS ведёт на экран-титр раздела.
   const menuItems = [
     { id: authorId, label: c.menuAbout },
-    { id: "project-001", label: c.menuProjects },
+    { id: "projects-title", label: c.menuProjects },
     { id: contactId, label: c.menuContact },
   ];
 
-  // Track active screen on scroll
+  // Track active screen on scroll.
+  // Экраны берём из DOM (видимые прямые дети скроллера): набор секций
+  // различается по брейкпоинтам, индексная адресация тут ломается.
   useEffect(() => {
     const root = scrollerRef.current;
     if (!root) return;
 
     const updateActive = () => {
       const height = root.clientHeight || 1;
-      const index = Math.round(root.scrollTop / height);
-      const nextId = screenIds[Math.max(0, Math.min(screenIds.length - 1, index))];
+      const sections = [
+        ...root.querySelectorAll<HTMLElement>(":scope > section"),
+      ].filter((s) => s.offsetParent !== null);
+      if (sections.length === 0) return;
+      const index = Math.max(
+        0,
+        Math.min(sections.length - 1, Math.round(root.scrollTop / height)),
+      );
+      const nextId = sections[index].id;
       setActiveScreenId((prev) => (prev === nextId ? prev : nextId));
     };
 
@@ -358,10 +365,17 @@ export default function Home() {
       raf = 0;
       const height = root.clientHeight || 1;
       // Только прямые дети скроллера: внутри ProfileCard есть свой <section>,
-      // который иначе сдвигает индексы и ломает тайминг шторки.
-      const sections = root.querySelectorAll<HTMLElement>(":scope > section");
-      sections.forEach((section, i) => {
-        const covered = Math.min(Math.max(root.scrollTop / height - i, 0), 1);
+      // который иначе сдвигает индексы и ломает тайминг шторки. Скрытые
+      // (мобильные/десктопные-only) секции отфильтровываем, а «накрытость»
+      // считаем от offsetTop — индексы по брейкпоинтам не совпадают.
+      const sections = [
+        ...root.querySelectorAll<HTMLElement>(":scope > section"),
+      ].filter((s) => s.offsetParent !== null);
+      sections.forEach((section) => {
+        const covered = Math.min(
+          Math.max((root.scrollTop - section.offsetTop) / height, 0),
+          1,
+        );
         const inner = section.querySelector<HTMLElement>("[data-screen-inner]");
         const veil = section.querySelector<HTMLElement>("[data-screen-veil]");
         if (inner) {
@@ -448,9 +462,9 @@ export default function Home() {
   const scrollToScreen = (id: string, behavior: ScrollBehavior = "smooth") => {
     const root = scrollerRef.current;
     if (!root) return;
-    const index = screenIds.indexOf(id);
-    if (index < 0) return;
-    root.scrollTo({ top: index * root.clientHeight, behavior });
+    const el = root.querySelector<HTMLElement>(`#${id}`);
+    if (!el || el.offsetParent === null) return;
+    root.scrollTo({ top: el.offsetTop, behavior });
   };
 
   // Из меню — мгновенный прыжок под открытой плитой, потом плита поднимается
@@ -462,10 +476,15 @@ export default function Home() {
 
   // Hint color based on current screen theme
   const activeScreen = projectScreens.find((s) => s.id === activeScreenId);
+  const darkScreenIds = [
+    authorId,
+    contactId,
+    "about-mobile",
+    "facts-mobile",
+    "projects-title",
+  ];
   const hintDark =
-    activeScreen?.theme === "dark" ||
-    activeScreenId === authorId ||
-    activeScreenId === contactId;
+    activeScreen?.theme === "dark" || darkScreenIds.includes(activeScreenId);
 
   return (
     <>
@@ -551,22 +570,6 @@ export default function Home() {
           ))}
         </p>
       </div>
-
-      {/* ── Wordmark (справа сверху) ── */}
-      <button
-        type="button"
-        aria-label="Go to profile"
-        className="fixed right-6 top-6 z-[70] font-mono text-[13px] tracking-[0.14em] text-white mix-blend-difference md:right-8"
-        onClick={() => {
-          if (menuOpen) {
-            jumpFromMenu(authorId);
-          } else {
-            scrollToScreen(authorId, "instant");
-          }
-        }}
-      >
-        13 | 14
-      </button>
 
       {/* ── Scroll hint ── */}
       <div
@@ -666,6 +669,106 @@ export default function Home() {
               </div>
             </div>
           </div>
+        </section>
+
+        {/* ── Mobile: About — полный текст (на десктопе живёт в панели профиля) ── */}
+        <section
+          id="about-mobile"
+          className="sticky top-0 h-[100dvh] w-full overflow-hidden bg-black text-white md:hidden"
+        >
+          <div
+            data-screen-inner
+            className="flex h-full flex-col justify-center px-6 py-14"
+          >
+            <div className="space-y-4">
+              <p className="reveal-blur font-mono text-[11px] font-medium tracking-[0.16em] text-white/45">
+                {c.menuAbout}
+              </p>
+              {c.about.map((paragraph, i) => (
+                <p
+                  key={i}
+                  className={`reveal-blur text-[12.5px] leading-[1.55] ${
+                    i === 0 ? "text-white/85" : "text-white/70"
+                  }`}
+                  style={
+                    { "--reveal-delay": `${i * 0.08}s` } as React.CSSProperties
+                  }
+                >
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+          </div>
+          <div
+            data-screen-veil
+            className="pointer-events-none absolute inset-0 bg-black opacity-0"
+          />
+        </section>
+
+        {/* ── Mobile: Facts — колонки одна под другой ── */}
+        <section
+          id="facts-mobile"
+          className="sticky top-0 h-[100dvh] w-full overflow-hidden bg-black text-white md:hidden"
+        >
+          <div
+            data-screen-inner
+            className="flex h-full flex-col justify-center px-6 py-14"
+          >
+            <div className="grid grid-cols-1 gap-y-6 font-mono">
+              {c.columns.map((col, ci) => (
+                <div
+                  key={col.h}
+                  className="reveal-blur space-y-1.5"
+                  style={
+                    { "--reveal-delay": `${ci * 0.08}s` } as React.CSSProperties
+                  }
+                >
+                  <p className="text-[10px] font-medium tracking-[0.14em] text-white/45">
+                    {col.h}
+                  </p>
+                  <ul className="space-y-1">
+                    {col.items.map((item) => (
+                      <li
+                        key={item}
+                        className="text-[11px] leading-snug text-white/70"
+                      >
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div
+            data-screen-veil
+            className="pointer-events-none absolute inset-0 bg-black opacity-0"
+          />
+        </section>
+
+        {/* ── Титр раздела Projects: переход от «обо мне» к кейсам ── */}
+        <section
+          id="projects-title"
+          className="sticky top-0 h-[100dvh] w-full overflow-hidden bg-black text-white"
+        >
+          <div
+            data-screen-inner
+            className="flex h-full flex-col items-center justify-center gap-4 px-6"
+          >
+            <h2 className="reveal-blur text-[clamp(40px,6vw,64px)] leading-none tracking-[0.01em]">
+              {c.projectsTitle}
+            </h2>
+            <p
+              className="reveal-blur font-mono text-[11px] tracking-[0.16em] text-white/50"
+              style={{ "--reveal-delay": "0.12s" } as React.CSSProperties}
+            >
+              {projectScreens.length} {c.projectsCount}
+            </p>
+          </div>
+          <div
+            data-screen-veil
+            className="pointer-events-none absolute inset-0 bg-black opacity-0"
+          />
         </section>
 
         {/* ── Project screens ── */}
