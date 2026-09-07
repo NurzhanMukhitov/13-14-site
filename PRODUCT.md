@@ -27,11 +27,10 @@ web
 событий верхнего сегмента. Кейсы с фото (иностранные первыми): Lamborghini 60th
 (Австрия), Lamborghini Dubai, Aston Martin, Mercedes-EQ, Samsung Galaxy S25,
 OMODA C7, T-Bank PAYvolution, Yandex Fabrika, Positive Technologies, T-Bank Music
-Festivals. Кейсы из CV, добавлены рамками без фото (материалы пользователь
-пришлёт): Jetour T1 (частный запуск), Sber Business Conference 2026 (Sber City),
-BMW Marathon Sponsorship (Москва/Мюнхен), Chery Tiggo 9 (Sky Screen), OMODA C5
-(онлайн-запуск). CV и сайт сверены 2026-09-01; OMODA C7 и C5 — разные проекты,
-оба остаются. Соседний кандидат не может честно скопировать этот список.
+Festivals, Jetour T1 (частный запуск; фото добавлены 2026-09-07, описания пока
+нет). Кейсы Sber Business Conference 2026, BMW Marathon Sponsorship, Chery
+Tiggo 9 и OMODA C5 сняты с сайта по решению пользователя 2026-09-07 (были
+рамками без фото). Соседний кандидат не может честно скопировать этот список.
 
 ## Operating Context
 

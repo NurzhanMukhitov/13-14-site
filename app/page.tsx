@@ -84,36 +84,12 @@ const projectScreens: ProjectScreen[] = [
     theme: "dark",
     images: ["/cases/tbank-festivals/1.jpg", "/cases/tbank-festivals/2.jpg", "/cases/tbank-festivals/4.jpg"],
   },
-  // Кейсы из CV — фото и описания появятся позже, пока рамка-заглушка.
   {
     id: "project-011",
     title: "PROJECT 011",
     subtitle: "Jetour T1 — Private Launch",
     theme: "light",
-  },
-  {
-    id: "project-012",
-    title: "PROJECT 012",
-    subtitle: "Sber Business Conference 2026 — Sber City",
-    theme: "dark",
-  },
-  {
-    id: "project-013",
-    title: "PROJECT 013",
-    subtitle: "BMW Marathon Sponsorship — Moscow & Munich",
-    theme: "light",
-  },
-  {
-    id: "project-014",
-    title: "PROJECT 014",
-    subtitle: "Chery Tiggo 9 — Sky Screen Premiere",
-    theme: "dark",
-  },
-  {
-    id: "project-015",
-    title: "PROJECT 015",
-    subtitle: "OMODA C5 — Online Launch",
-    theme: "light",
+    images: ["/cases/jetour-t1/1.jpg", "/cases/jetour-t1/2.jpg", "/cases/jetour-t1/3.jpg", "/cases/jetour-t1/4.jpg"],
   },
 ];
 
@@ -381,7 +357,9 @@ export default function Home() {
     const update = () => {
       raf = 0;
       const height = root.clientHeight || 1;
-      const sections = root.querySelectorAll<HTMLElement>("section");
+      // Только прямые дети скроллера: внутри ProfileCard есть свой <section>,
+      // который иначе сдвигает индексы и ломает тайминг шторки.
+      const sections = root.querySelectorAll<HTMLElement>(":scope > section");
       sections.forEach((section, i) => {
         const covered = Math.min(Math.max(root.scrollTop / height - i, 0), 1);
         const inner = section.querySelector<HTMLElement>("[data-screen-inner]");

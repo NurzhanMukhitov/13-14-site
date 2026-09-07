@@ -32,10 +32,10 @@
   не трогаем, оставляем как есть). `animation: none` в ProfileCard.css не менять.
 - Плашки/текст с карточки убраны. Справа — текст «обо мне».
 
-**Проекты (10, иностранные первыми):**
+**Проекты (11, иностранные первыми):**
 1. Lamborghini 60th (Австрия) · 2. Lamborghini Dubai · 3. Aston Martin · 4. Mercedes-EQ
 5. Samsung Galaxy S25 · 6. OMODA C7 · 7. T-Bank PAYvolution · 8. Yandex Fabrika
-9. Positive Technologies · 10. T-Bank Music Festivals.
+9. Positive Technologies · 10. T-Bank Music Festivals · 11. Jetour T1 (описания пока нет).
 - Каждый = **авто-слайдшоу** (3–4 фото, кросс-фейд ~3,8 с) + **полупрозрачная
   тёмная шторка** (`bg-black/55`) с названием и описанием поверх фото.
 - Данные проектов — массивы `projectScreens` и `projectNotes` в `page.tsx`.
