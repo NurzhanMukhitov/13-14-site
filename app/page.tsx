@@ -235,7 +235,6 @@ const COPY = {
     ],
     contactLabel: "CONTACT",
     projectsTitle: "Projects",
-    projectsCount: "SELECTED CASES",
   },
   es: {
     burgerMenu: "Menú",
@@ -285,7 +284,6 @@ const COPY = {
     ],
     contactLabel: "CONTACTO",
     projectsTitle: "Proyectos",
-    projectsCount: "CASOS SELECCIONADOS",
   },
 } as const;
 
@@ -398,33 +396,7 @@ export default function Home() {
     };
   }, []);
 
-  // JS-снап: CSS scroll-snap несовместим со sticky-шторкой
-  useEffect(() => {
-    const root = scrollerRef.current;
-    if (!root) return;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let timer: number | undefined;
-    const onScroll = () => {
-      window.clearTimeout(timer);
-      timer = window.setTimeout(() => {
-        const h = root.clientHeight || 1;
-        // Жёсткий клэмп к реальному концу скролла: округлённая цель может
-        // оказаться недостижимой (дробные высоты) — smooth-скролл тогда
-        // перезапускается бесконечно и экран дёргается.
-        const maxTop = root.scrollHeight - h;
-        const target = Math.min(Math.round(root.scrollTop / h) * h, maxTop);
-        if (Math.abs(target - root.scrollTop) > 2) {
-          root.scrollTo({ top: target, behavior: reduced ? "auto" : "smooth" });
-        }
-      }, 200);
-    };
-    root.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      root.removeEventListener("scroll", onScroll);
-      window.clearTimeout(timer);
-    };
-  }, []);
-
+  // Снап нативный: маркеры в потоке несут snap-start (см. разметку main).
   // Reveal: тексты наводятся на резкость один раз при входе в кадр
   useEffect(() => {
     const root = scrollerRef.current;
@@ -593,17 +565,30 @@ export default function Home() {
       {/* ── Main vertical scroller ── */}
       <main
         ref={scrollerRef}
-        className="h-[100dvh] overflow-y-auto overflow-x-hidden scroll-smooth bg-black"
+        className="relative h-[100dvh] snap-y snap-mandatory overflow-y-auto overflow-x-hidden scroll-smooth bg-black"
       >
+        {/* Снап-маркеры: sticky-секции не могут нести snap-align сами (их
+            прилипшая позиция ломает нативный снап), поэтому точки
+            примагничивания — невидимые боксы в потоке на каждые 100dvh.
+            Лишние маркеры за концом ленты недостижимы и безвредны. */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0">
+          {Array.from({ length: projectScreens.length + 5 }).map((_, i) => (
+            <div
+              key={i}
+              className="absolute h-[100dvh] w-px snap-start"
+              style={{ top: `${i * 100}dvh` }}
+            />
+          ))}
+        </div>
         {/* ── Profile section (первый экран, наполним фото + текстом) ── */}
         <section
           id={authorId}
           className="sticky top-0 h-[100dvh] w-full overflow-hidden bg-black text-white md:flex md:flex-row"
         >
-          {/* Sphere — fills screen on mobile (centered), left panel on desktop */}
+          {/* Фото: на мобиле прижато к верху, подпись под ним; на десктопе — левая панель */}
           <div
             id="visual-sketch"
-            className="absolute inset-0 flex items-center justify-center overflow-hidden px-6 pt-14 md:relative md:inset-auto md:h-full md:w-[44%] md:flex-shrink-0 md:pt-16"
+            className="flex items-start justify-center overflow-hidden px-6 pt-[84px] md:h-full md:w-[44%] md:flex-shrink-0 md:items-center md:pt-16"
           >
             <ProfileCard
               avatarUrl="/profile/photo.jpg"
@@ -616,12 +601,12 @@ export default function Home() {
             />
           </div>
 
-          {/* Mobile: name + role at bottom-left */}
-          <div className="absolute bottom-8 left-6 right-6 z-10 space-y-2 md:hidden">
-            <p className="font-display text-[30px] font-normal leading-[1.05] tracking-[0.01em] text-white">
+          {/* Mobile: подпись в потоке сразу под фото */}
+          <div className="px-6 pt-6 md:hidden">
+            <p className="font-display text-[32px] font-normal leading-[1.05] tracking-[0.01em] text-white">
               Nurzhan Mukhitov
             </p>
-            <p className="text-[10px] tracking-[0.16em] text-white/60">
+            <p className="pt-2 text-[11px] tracking-[0.16em] text-white/75">
               {c.role}
             </p>
           </div>
@@ -681,14 +666,14 @@ export default function Home() {
             className="flex h-full flex-col justify-center px-6 py-14"
           >
             <div className="space-y-4">
-              <p className="reveal-blur font-mono text-[11px] font-medium tracking-[0.16em] text-white/45">
+              <p className="reveal-blur font-mono text-[11px] font-medium tracking-[0.16em] text-white/60">
                 {c.menuAbout}
               </p>
               {c.about.map((paragraph, i) => (
                 <p
                   key={i}
-                  className={`reveal-blur text-[12.5px] leading-[1.55] ${
-                    i === 0 ? "text-white/85" : "text-white/70"
+                  className={`reveal-blur text-[13px] leading-[1.55] ${
+                    i === 0 ? "text-white" : "text-white/85"
                   }`}
                   style={
                     { "--reveal-delay": `${i * 0.08}s` } as React.CSSProperties
@@ -714,23 +699,24 @@ export default function Home() {
             data-screen-inner
             className="flex h-full flex-col justify-center px-6 py-14"
           >
-            <div className="grid grid-cols-1 gap-y-6 font-mono">
+            {/* Гроссбух: hairline-строки, метка слева, пункты справа */}
+            <div className="divide-y divide-white/15 border-y border-white/15 font-mono">
               {c.columns.map((col, ci) => (
                 <div
                   key={col.h}
-                  className="reveal-blur space-y-1.5"
+                  className="reveal-blur grid grid-cols-[104px_1fr] gap-x-4 py-4"
                   style={
                     { "--reveal-delay": `${ci * 0.08}s` } as React.CSSProperties
                   }
                 >
-                  <p className="text-[10px] font-medium tracking-[0.14em] text-white/45">
+                  <p className="pt-0.5 text-[10px] font-medium tracking-[0.14em] text-white/55">
                     {col.h}
                   </p>
-                  <ul className="space-y-1">
+                  <ul className="space-y-1.5">
                     {col.items.map((item) => (
                       <li
                         key={item}
-                        className="text-[11px] leading-snug text-white/70"
+                        className="text-[12.5px] leading-snug text-white/90"
                       >
                         {item}
                       </li>
@@ -753,17 +739,11 @@ export default function Home() {
         >
           <div
             data-screen-inner
-            className="flex h-full flex-col items-center justify-center gap-4 px-6"
+            className="flex h-full flex-col justify-end px-6 pb-16 md:px-[5vw] md:pb-20"
           >
-            <h2 className="reveal-blur text-[clamp(40px,6vw,64px)] leading-none tracking-[0.01em]">
+            <h2 className="reveal-blur font-display text-[clamp(48px,10vw,104px)] font-bold leading-none tracking-[0.01em]">
               {c.projectsTitle}
             </h2>
-            <p
-              className="reveal-blur font-mono text-[11px] tracking-[0.16em] text-white/50"
-              style={{ "--reveal-delay": "0.12s" } as React.CSSProperties}
-            >
-              {projectScreens.length} {c.projectsCount}
-            </p>
           </div>
           <div
             data-screen-veil
