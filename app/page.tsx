@@ -314,12 +314,19 @@ export default function Home() {
   const contactId = "contact";
 
   // Бургер-меню: три раздела, без выделения цветом.
-  // PROJECTS ведёт на экран-титр раздела.
-  const menuItems = [
-    { id: authorId, label: c.menuAbout },
+  // PROJECTS ведёт на экран-титр; ABOUT на мобиле — на текстовый экран
+  // (на десктопе его нет, fallback — профиль).
+  const menuItems: { id: string; fallbackId?: string; label: string }[] = [
+    { id: "about-mobile", fallbackId: authorId, label: c.menuAbout },
     { id: "projects-title", label: c.menuProjects },
     { id: contactId, label: c.menuContact },
   ];
+
+  // id видимой цели: скрытый на этом брейкпоинте экран заменяем запасным.
+  const resolveTargetId = (id: string, fallbackId?: string) => {
+    const el = scrollerRef.current?.querySelector<HTMLElement>(`#${id}`);
+    return el && el.offsetParent !== null ? id : (fallbackId ?? id);
+  };
 
   // Track active screen on scroll.
   // Экраны берём из DOM (видимые прямые дети скроллера): набор секций
@@ -363,15 +370,15 @@ export default function Home() {
       raf = 0;
       const height = root.clientHeight || 1;
       // Только прямые дети скроллера: внутри ProfileCard есть свой <section>,
-      // который иначе сдвигает индексы и ломает тайминг шторки. Скрытые
-      // (мобильные/десктопные-only) секции отфильтровываем, а «накрытость»
-      // считаем от offsetTop — индексы по брейкпоинтам не совпадают.
+      // который иначе сдвигает индексы. Скрытые на этом брейкпоинте секции
+      // отфильтровываем; «накрытость» считаем по индексу видимой секции —
+      // offsetTop у прилипшего sticky-экрана врёт (равен текущему скроллу).
       const sections = [
         ...root.querySelectorAll<HTMLElement>(":scope > section"),
       ].filter((s) => s.offsetParent !== null);
-      sections.forEach((section) => {
+      sections.forEach((section, i) => {
         const covered = Math.min(
-          Math.max((root.scrollTop - section.offsetTop) / height, 0),
+          Math.max(root.scrollTop / height - i, 0),
           1,
         );
         const inner = section.querySelector<HTMLElement>("[data-screen-inner]");
@@ -431,12 +438,18 @@ export default function Home() {
     return () => root.removeEventListener("scroll", hideHint);
   }, []);
 
+  // Позиция экрана = индекс среди ВИДИМЫХ секций × высота вьюпорта.
+  // offsetTop не годится: у прилипшего sticky-экрана он равен текущему
+  // скроллу, и прыжок вверх «едет туда, где уже стоим».
   const scrollToScreen = (id: string, behavior: ScrollBehavior = "smooth") => {
     const root = scrollerRef.current;
     if (!root) return;
-    const el = root.querySelector<HTMLElement>(`#${id}`);
-    if (!el || el.offsetParent === null) return;
-    root.scrollTo({ top: el.offsetTop, behavior });
+    const sections = [
+      ...root.querySelectorAll<HTMLElement>(":scope > section"),
+    ].filter((s) => s.offsetParent !== null);
+    const index = sections.findIndex((s) => s.id === id);
+    if (index < 0) return;
+    root.scrollTo({ top: index * root.clientHeight, behavior });
   };
 
   // Из меню — мгновенный прыжок под открытой плитой, потом плита поднимается
@@ -475,7 +488,9 @@ export default function Home() {
                   type="button"
                   className="bm-link whitespace-nowrap text-[clamp(26px,7vw,34px)] font-medium tracking-[0.02em] text-white md:text-[clamp(1.1rem,2vw,1.9rem)]"
                   style={{ "--i": i } as React.CSSProperties}
-                  onClick={() => jumpFromMenu(item.id)}
+                  onClick={() =>
+                    jumpFromMenu(resolveTargetId(item.id, item.fallbackId))
+                  }
                 >
                   {item.label}
                 </button>
@@ -588,7 +603,7 @@ export default function Home() {
           {/* Фото: на мобиле прижато к верху, подпись под ним; на десктопе — левая панель */}
           <div
             id="visual-sketch"
-            className="flex items-start justify-center overflow-hidden px-6 pt-[84px] md:h-full md:w-[44%] md:flex-shrink-0 md:items-center md:pt-16"
+            className="flex items-start justify-center overflow-hidden px-6 pt-[14vh] md:h-full md:w-[44%] md:flex-shrink-0 md:items-center md:pt-16"
           >
             <ProfileCard
               avatarUrl="/profile/photo.jpg"
@@ -602,7 +617,7 @@ export default function Home() {
           </div>
 
           {/* Mobile: подпись в потоке сразу под фото */}
-          <div className="px-6 pt-6 md:hidden">
+          <div className="px-6 pt-6 text-center md:hidden">
             <p className="font-display text-[32px] font-normal leading-[1.05] tracking-[0.01em] text-white">
               Nurzhan Mukhitov
             </p>
